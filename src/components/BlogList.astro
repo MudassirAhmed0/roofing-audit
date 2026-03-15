@@ -35,7 +35,7 @@ const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
       {featured && (
         <a
           href={`/blog/${featured.id.replace(/\.md$/, "")}/`}
-          class="group block rounded-xl border border-rule overflow-hidden bg-surface-alt/40 transition-all duration-500 hover:border-accent/30 hover:shadow-[0_0_60px_rgba(14,165,233,0.06)]"
+          class="group block rounded-sm border border-rule overflow-hidden bg-surface-alt/40 transition-all duration-500 hover:border-accent/30 hover:shadow-[0_0_60px_rgba(14,165,233,0.06)]"
           data-reveal style="--delay:80ms"
         >
           <div class="grid grid-cols-1 md:grid-cols-2">
@@ -76,7 +76,7 @@ const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
         {gridPosts.map((post, i) => (
           <a
             href={`/blog/${post.id.replace(/\.md$/, "")}/`}
-            class="group rounded-xl border border-rule overflow-hidden bg-surface-alt/40 transition-all duration-500 hover:border-accent/30 hover:shadow-[0_0_60px_rgba(14,165,233,0.06)]"
+            class="group rounded-sm border border-rule overflow-hidden bg-surface-alt/40 transition-all duration-500 hover:border-accent/30 hover:shadow-[0_0_60px_rgba(14,165,233,0.06)]"
             data-reveal
             style={`--delay:${(i + 1) * 80}ms`}
           >
@@ -116,12 +116,12 @@ const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
           {page.url.prev ? (
             <a
               href={page.url.prev}
-              class="px-4 py-2 rounded-lg border border-rule text-sm font-medium text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
+              class="px-4 py-2 rounded-sm border border-rule text-sm font-medium text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
             >
               Previous
             </a>
           ) : (
-            <span class="px-4 py-2 rounded-lg border border-rule/40 text-sm font-medium text-ink-faint cursor-not-allowed">
+            <span class="px-4 py-2 rounded-sm border border-rule/40 text-sm font-medium text-ink-faint cursor-not-allowed">
               Previous
             </span>
           )}
@@ -130,7 +130,7 @@ const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
             <a
               href={num === 1 ? "/blog/" : `/blog/page/${num}/`}
               class:list={[
-                "w-10 h-10 rounded-lg border text-sm font-medium flex items-center justify-center transition-colors",
+                "w-10 h-10 rounded-sm border text-sm font-medium flex items-center justify-center transition-colors",
                 num === page.currentPage
                   ? "border-accent bg-accent/10 text-accent"
                   : "border-rule text-ink-secondary hover:text-accent hover:border-accent/40",
@@ -144,12 +144,12 @@ const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
           {page.url.next ? (
             <a
               href={page.url.next}
-              class="px-4 py-2 rounded-lg border border-rule text-sm font-medium text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
+              class="px-4 py-2 rounded-sm border border-rule text-sm font-medium text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
             >
               Next
             </a>
           ) : (
-            <span class="px-4 py-2 rounded-lg border border-rule/40 text-sm font-medium text-ink-faint cursor-not-allowed">
+            <span class="px-4 py-2 rounded-sm border border-rule/40 text-sm font-medium text-ink-faint cursor-not-allowed">
               Next
             </span>
           )}
@@ -160,7 +160,7 @@ const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
     <!-- Right: sticky form (desktop only) -->
     <aside class="hidden lg:block w-[300px] xl:w-[320px] flex-none" data-nosnippet>
       <div class="sticky top-24" data-reveal style="--delay:300ms">
-        <div class="rounded-xl border border-rule bg-surface-alt/60 p-6">
+        <div class="rounded-sm border border-rule bg-surface-alt/60 p-6">
           <p class="text-lg font-bold tracking-tight mb-1">
             Free audit
           </p>
@@ -183,7 +183,7 @@ const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
               placeholder="Business name"
               required
               autocomplete="organization"
-              class="w-full px-4 py-3 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+              class="w-full px-4 py-3 rounded-sm bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
             />
             <input
               type="text"
@@ -191,7 +191,7 @@ const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
               placeholder="yoursite.com"
               required
               autocomplete="url"
-              class="w-full px-4 py-3 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+              class="w-full px-4 py-3 rounded-sm bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
             />
             <input
               type="email"
@@ -199,12 +199,12 @@ const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
               placeholder="Email for report"
               required
               autocomplete="email"
-              class="w-full px-4 py-3 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+              class="w-full px-4 py-3 rounded-sm bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
             />
             <button
               type="submit"
               id="blog-list-submit"
-              class="w-full px-5 py-3.5 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-colors duration-300 cursor-pointer"
+              class="w-full px-5 py-3.5 rounded-sm bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-colors duration-300 cursor-pointer"
             >
               Run My Free Audit
             </button>
@@ -246,7 +246,7 @@ const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
   </div>
 
   <!-- Mobile form -->
-  <div class="lg:hidden mt-16 rounded-xl border border-accent/20 bg-accent/5 px-6 py-8" data-reveal data-nosnippet>
+  <div class="lg:hidden mt-16 rounded-sm border border-accent/20 bg-accent/5 px-6 py-8" data-reveal data-nosnippet>
     <p class="text-xl font-bold tracking-tight mb-1">
       Want to know your score?
     </p>
@@ -261,10 +261,10 @@ const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
     >
       <input type="hidden" name="_subject" value="Blog List Audit Request (Mobile)" />
       <input type="text" name="_gotcha" style="display:none" />
-      <input type="text" name="business_name" placeholder="Business name" required class="w-full px-4 py-3.5 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300" />
-      <input type="text" name="website" placeholder="yoursite.com" required class="w-full px-4 py-3.5 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300" />
-      <input type="email" name="email" placeholder="Email for report" required class="w-full px-4 py-3.5 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300" />
-      <button type="submit" id="blog-list-submit-mobile" class="w-full px-5 py-3.5 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-colors duration-300 cursor-pointer">
+      <input type="text" name="business_name" placeholder="Business name" required class="w-full px-4 py-3.5 rounded-sm bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300" />
+      <input type="text" name="website" placeholder="yoursite.com" required class="w-full px-4 py-3.5 rounded-sm bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300" />
+      <input type="email" name="email" placeholder="Email for report" required class="w-full px-4 py-3.5 rounded-sm bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300" />
+      <button type="submit" id="blog-list-submit-mobile" class="w-full px-5 py-3.5 rounded-sm bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-colors duration-300 cursor-pointer">
         Run My Free Audit
       </button>
     </form>

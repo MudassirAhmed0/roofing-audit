@@ -77,25 +77,25 @@ const scoreColor =
         <!-- Severity cards -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {criticalCount > 0 && (
-            <div class="rounded-lg border border-red-500/20 bg-red-500/5 px-4 py-3 text-center">
+            <div class="rounded-sm border border-red-500/20 bg-red-500/5 px-4 py-3 text-center">
               <p class="text-2xl font-bold text-red-400">{criticalCount}</p>
               <p class="text-xs font-mono text-ink-muted mt-0.5">Critical</p>
             </div>
           )}
           {highCount > 0 && (
-            <div class="rounded-lg border border-orange-500/20 bg-orange-500/5 px-4 py-3 text-center">
+            <div class="rounded-sm border border-orange-500/20 bg-orange-500/5 px-4 py-3 text-center">
               <p class="text-2xl font-bold text-orange-400">{highCount}</p>
               <p class="text-xs font-mono text-ink-muted mt-0.5">High</p>
             </div>
           )}
           {mediumCount > 0 && (
-            <div class="rounded-lg border border-yellow-500/20 bg-yellow-500/5 px-4 py-3 text-center">
+            <div class="rounded-sm border border-yellow-500/20 bg-yellow-500/5 px-4 py-3 text-center">
               <p class="text-2xl font-bold text-yellow-400">{mediumCount}</p>
               <p class="text-xs font-mono text-ink-muted mt-0.5">Medium</p>
             </div>
           )}
           {lowCount > 0 && (
-            <div class="rounded-lg border border-blue-500/20 bg-blue-500/5 px-4 py-3 text-center">
+            <div class="rounded-sm border border-blue-500/20 bg-blue-500/5 px-4 py-3 text-center">
               <p class="text-2xl font-bold text-blue-400">{lowCount}</p>
               <p class="text-xs font-mono text-ink-muted mt-0.5">Low</p>
             </div>
@@ -136,11 +136,11 @@ const scoreColor =
     <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-4">
       {biz.topThreeGaps.map((gap, i) => (
         <div
-          class="flex items-start gap-4 rounded-xl border border-rule bg-surface-alt/40 px-5 py-5"
+          class="flex items-start gap-4 rounded-sm border border-rule bg-surface-alt/40 px-5 py-5"
           data-reveal
           style={`--delay:${(i + 1) * 80}ms`}
         >
-          <span class="flex-none w-10 h-10 rounded-lg bg-danger/15 text-danger flex items-center justify-center font-bold text-lg font-mono">
+          <span class="flex-none w-10 h-10 rounded-sm bg-danger/15 text-danger flex items-center justify-center font-bold text-lg font-mono">
             {i + 1}
           </span>
           <p class="text-ink leading-relaxed">{gap}</p>
@@ -155,9 +155,9 @@ const scoreColor =
   <div class="px-6 md:px-12 lg:px-16">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" data-reveal>
       <!-- What we found -->
-      <div class="rounded-xl border border-rule bg-surface-alt/40 p-5 sm:p-6">
+      <div class="rounded-sm border border-rule bg-surface-alt/40 p-5 sm:p-6">
         <div class="flex items-center gap-3 mb-3">
-          <div class="flex-none w-8 h-8 rounded-lg bg-danger/15 text-danger flex items-center justify-center">
+          <div class="flex-none w-8 h-8 rounded-sm bg-danger/15 text-danger flex items-center justify-center">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -169,9 +169,9 @@ const scoreColor =
       </div>
 
       <!-- What happens -->
-      <div class="rounded-xl border border-rule bg-surface-alt/40 p-5 sm:p-6" data-reveal style="--delay:100ms">
+      <div class="rounded-sm border border-rule bg-surface-alt/40 p-5 sm:p-6" data-reveal style="--delay:100ms">
         <div class="flex items-center gap-3 mb-3">
-          <div class="flex-none w-8 h-8 rounded-lg bg-warning/15 text-warning flex items-center justify-center">
+          <div class="flex-none w-8 h-8 rounded-sm bg-warning/15 text-warning flex items-center justify-center">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>
@@ -184,9 +184,9 @@ const scoreColor =
       </div>
 
       <!-- What it could cost -->
-      <div class="rounded-xl border border-rule bg-surface-alt/40 p-5 sm:p-6" data-reveal style="--delay:200ms">
+      <div class="rounded-sm border border-rule bg-surface-alt/40 p-5 sm:p-6" data-reveal style="--delay:200ms">
         <div class="flex items-center gap-3 mb-3">
-          <div class="flex-none w-8 h-8 rounded-lg bg-accent/15 text-accent flex items-center justify-center">
+          <div class="flex-none w-8 h-8 rounded-sm bg-accent/15 text-accent flex items-center justify-center">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -220,7 +220,7 @@ const scoreColor =
       Where to Start
     </h2>
 
-    <div class="mt-8 rounded-xl border border-accent/30 bg-surface px-6 py-7" data-reveal style="--delay:80ms">
+    <div class="mt-8 rounded-sm border border-accent/30 bg-surface px-6 py-7" data-reveal style="--delay:80ms">
       <p class="text-lg text-ink leading-relaxed font-medium">{biz.recommendedFirstProject}</p>
 
       <div class="mt-5 flex items-center gap-2">
@@ -254,7 +254,7 @@ const scoreColor =
         const catLabel = categoryLabels[gap.category] || gap.category;
         return (
           <details
-            class={`group rounded-xl border ${colors.border} ${colors.bg} overflow-hidden`}
+            class={`group rounded-sm border ${colors.border} ${colors.bg} overflow-hidden`}
             data-reveal
             style={`--delay:${Math.min(i * 40, 400)}ms`}
           >
@@ -323,7 +323,7 @@ const scoreColor =
     <div class="mt-6 flex flex-col sm:flex-row items-start gap-4" data-reveal style="--delay:240ms">
       <a
         href="mailto:mudassir@creativeaxe.co?subject=Re: Website Audit — {report.name}"
-        class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:bg-accent-hover transition-colors"
+        class="inline-flex items-center gap-2 px-6 py-3 rounded-sm bg-accent text-white font-semibold text-sm hover:bg-accent-hover transition-colors"
       >
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />

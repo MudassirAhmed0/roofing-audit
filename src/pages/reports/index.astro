@@ -61,7 +61,7 @@ const jsonLd = [
         <!-- Right: sticky form (desktop only) -->
         <aside class="hidden lg:block w-[300px] xl:w-[320px] flex-none">
           <div class="sticky top-24" data-reveal style="--delay:300ms">
-            <div class="rounded-xl border border-rule bg-surface-alt/60 p-6">
+            <div class="rounded-sm border border-rule bg-surface-alt/60 p-6">
               <p class="text-lg font-bold tracking-tight mb-1">
                 Free audit
               </p>
@@ -84,7 +84,7 @@ const jsonLd = [
                   placeholder="Business name"
                   required
                   autocomplete="organization"
-                  class="w-full px-4 py-3 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+                  class="w-full px-4 py-3 rounded-sm bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
                 />
                 <input
                   type="text"
@@ -92,7 +92,7 @@ const jsonLd = [
                   placeholder="yoursite.com"
                   required
                   autocomplete="url"
-                  class="w-full px-4 py-3 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+                  class="w-full px-4 py-3 rounded-sm bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
                 />
                 <input
                   type="email"
@@ -100,12 +100,12 @@ const jsonLd = [
                   placeholder="Email for report"
                   required
                   autocomplete="email"
-                  class="w-full px-4 py-3 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+                  class="w-full px-4 py-3 rounded-sm bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
                 />
                 <button
                   type="submit"
                   id="reports-submit"
-                  class="w-full px-5 py-3.5 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-colors duration-300 cursor-pointer"
+                  class="w-full px-5 py-3.5 rounded-sm bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-colors duration-300 cursor-pointer"
                 >
                   Run My Free Audit
                 </button>
@@ -147,7 +147,7 @@ const jsonLd = [
       </div>
 
       <!-- Mobile form -->
-      <div class="lg:hidden mt-16 rounded-xl border border-accent/20 bg-accent/5 px-6 py-8" data-reveal>
+      <div class="lg:hidden mt-16 rounded-sm border border-accent/20 bg-accent/5 px-6 py-8" data-reveal>
         <p class="text-xl font-bold tracking-tight mb-1">
           Want to know your score?
         </p>
@@ -163,10 +163,10 @@ const jsonLd = [
         >
           <input type="hidden" name="_subject" value="Reports Page Audit Request (Mobile)" />
           <input type="text" name="_gotcha" style="display:none" />
-          <input type="text" name="business_name" placeholder="Business name" required class="w-full px-4 py-3.5 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300" />
-          <input type="text" name="website" placeholder="yoursite.com" required class="w-full px-4 py-3.5 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300" />
-          <input type="email" name="email" placeholder="Email for report" required class="w-full px-4 py-3.5 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300" />
-          <button type="submit" id="reports-submit-mobile" class="w-full px-5 py-3.5 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-colors duration-300 cursor-pointer">
+          <input type="text" name="business_name" placeholder="Business name" required class="w-full px-4 py-3.5 rounded-sm bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300" />
+          <input type="text" name="website" placeholder="yoursite.com" required class="w-full px-4 py-3.5 rounded-sm bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300" />
+          <input type="email" name="email" placeholder="Email for report" required class="w-full px-4 py-3.5 rounded-sm bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300" />
+          <button type="submit" id="reports-submit-mobile" class="w-full px-5 py-3.5 rounded-sm bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-colors duration-300 cursor-pointer">
             Run My Free Audit
           </button>
         </form>

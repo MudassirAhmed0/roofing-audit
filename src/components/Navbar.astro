@@ -58,7 +58,7 @@ const topProblems = marketData.problems.slice(0, 6);
           <div class="grid grid-cols-3 gap-6">
             <!-- Column 1: Overview + States -->
             <div>
-              <a href="/market/roofing/" class="block rounded-lg px-3 py-2.5 hover:bg-white/5 transition-colors mb-2">
+              <a href="/market/roofing/" class="block rounded-sm px-3 py-2.5 hover:bg-white/5 transition-colors mb-2">
                 <p class="text-sm font-semibold text-ink">National Roofing Report</p>
                 <p class="text-[11px] text-ink-muted mt-0.5">{marketData.national?.totalLeads ?? 0} sites analyzed across {marketData.national?.stateCount ?? 0} states</p>
               </a>
@@ -66,7 +66,7 @@ const topProblems = marketData.problems.slice(0, 6);
               <ul class="space-y-0.5">
                 {marketData.states.map((state) => (
                   <li>
-                    <a href={`/market/roofing/${state.slug}/`} class="block rounded-lg px-3 py-1.5 text-sm text-ink-secondary hover:text-accent hover:bg-white/5 transition-colors">
+                    <a href={`/market/roofing/${state.slug}/`} class="block rounded-sm px-3 py-1.5 text-sm text-ink-secondary hover:text-accent hover:bg-white/5 transition-colors">
                       {state.stateName}
                       <span class="text-ink-faint text-[10px] ml-1">{state.totalLeads}</span>
                     </a>
@@ -81,7 +81,7 @@ const topProblems = marketData.problems.slice(0, 6);
               <ul class="space-y-0.5">
                 {topCities.map((city) => (
                   <li>
-                    <a href={`/market/roofing/${city.slug}/`} class="block rounded-lg px-3 py-1.5 text-sm text-ink-secondary hover:text-accent hover:bg-white/5 transition-colors">
+                    <a href={`/market/roofing/${city.slug}/`} class="block rounded-sm px-3 py-1.5 text-sm text-ink-secondary hover:text-accent hover:bg-white/5 transition-colors">
                       {city.city}, {city.state}
                       <span class="text-ink-faint text-[10px] ml-1">{city.totalLeads}</span>
                     </a>
@@ -99,7 +99,7 @@ const topProblems = marketData.problems.slice(0, 6);
               <ul class="space-y-0.5">
                 {topProblems.map((problem) => (
                   <li>
-                    <a href={`/market/roofing/${problem.slug}/`} class="block rounded-lg px-3 py-1.5 text-sm text-ink-secondary hover:text-accent hover:bg-white/5 transition-colors">
+                    <a href={`/market/roofing/${problem.slug}/`} class="block rounded-sm px-3 py-1.5 text-sm text-ink-secondary hover:text-accent hover:bg-white/5 transition-colors">
                       {problem.gap}
                       <span class="text-ink-faint text-[10px] ml-1">{Math.round(problem.nationalFrequency * 100)}%</span>
                     </a>

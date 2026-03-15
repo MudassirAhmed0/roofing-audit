@@ -15,40 +15,43 @@
 }
 
 @theme {
-  /* Surface */
-  --color-surface: #ffffff;
-  --color-surface-alt: #f4f4f5;
-  --color-surface-elevated: #ffffff;
-  --color-surface-card: #f9fafb;
+  /* Surface — Dark slate/stone foundation */
+  --color-surface: #1c1917;
+  --color-surface-alt: #292524;
+  --color-surface-elevated: #292524;
+  --color-surface-card: #292524;
 
-  /* Accent — Emerald 600/700 (WCAG AA: 4.6:1 / 6.2:1 on white) */
-  --color-accent: #059669;
-  --color-accent-hover: #047857;
-  --color-accent-muted: rgba(5, 150, 105, 0.06);
-  --color-accent-border: rgba(5, 150, 105, 0.25);
-  --color-accent-subtle: #ecfdf5;
+  /* Accent — Copper/amber (warm industrial) */
+  --color-accent: #d97706;
+  --color-accent-hover: #b45309;
+  --color-accent-muted: rgba(217, 119, 6, 0.08);
+  --color-accent-border: rgba(217, 119, 6, 0.3);
+  --color-accent-subtle: rgba(217, 119, 6, 0.06);
+
+  /* Storm blue — sparingly for info states, links */
+  --color-info: #3b82f6;
 
   /* Semantic */
-  --color-danger: #dc2626;
-  --color-warning: #d97706;
-  --color-success: #16a34a;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+  --color-success: #22c55e;
 
-  /* Ink */
-  --color-ink: #18181b;
-  --color-ink-secondary: #3f3f46;
-  --color-ink-muted: #52525b;
-  --color-ink-faint: #71717a;
+  /* Ink — warm off-white hierarchy */
+  --color-ink: #fafaf9;
+  --color-ink-secondary: #d6d3d1;
+  --color-ink-muted: #a8a29e;
+  --color-ink-faint: #78716c;
 
-  /* Borders */
-  --color-rule: #e4e4e7;
-  --color-rule-light: #f4f4f5;
+  /* Borders — steel gray */
+  --color-rule: #3f3f46;
+  --color-rule-light: #292524;
 
-  /* Shadows — cool-toned, low opacity for premium light theme */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+  /* Shadows — warm-toned for dark theme */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.25), 0 1px 2px -1px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.35), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
 
   /* Fonts */
   --font-sans: "Geist", system-ui, -apple-system, sans-serif;
@@ -71,7 +74,7 @@ body {
 
 ::selection {
   background-color: var(--color-accent);
-  color: #fff;
+  color: #1c1917;
 }
 
 /* ── Focus styles ── */
@@ -144,21 +147,21 @@ input:focus-visible, button:focus-visible {
   }
 }
 
-/* ── Nav theming ── */
-.nav-dark { --nav-text: #18181b; }
-.nav-light { --nav-text: #18181b; }
+/* ── Nav theming (dark theme) ── */
+.nav-dark { --nav-text: #fafaf9; }
+.nav-light { --nav-text: #fafaf9; }
 
 #navbar {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 #navbar.is-scrolled {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(28, 25, 23, 0.92);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-rule);
 }
 
-/* ── Nav mega dropdown (CSS-only) ── */
+/* ── Nav mega dropdown ── */
 .nav-mega::before {
   content: "";
   position: absolute;
@@ -172,11 +175,11 @@ input:focus-visible, button:focus-visible {
   top: calc(100% + 12px);
   right: -120px;
   width: 640px;
-  background: rgba(255, 255, 255, 0.98);
+  background: rgba(41, 37, 36, 0.98);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border: 1px solid var(--color-rule);
-  border-radius: 12px;
+  border-radius: 4px;
   padding: 20px;
   opacity: 0;
   visibility: hidden;
@@ -199,14 +202,14 @@ input:focus-visible, button:focus-visible {
   transform: rotate(180deg);
 }
 
-/* ── Blog TOC bar ── */
+/* ── Blog TOC bar (dark) ── */
 .toc-bar {
   position: fixed;
   top: 60px;
   left: 0;
   right: 0;
   z-index: 40;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(28, 25, 23, 0.92);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-rule);
@@ -273,7 +276,7 @@ input:focus-visible, button:focus-visible {
   display: inline-block;
   white-space: nowrap;
   padding: 5px 14px;
-  border-radius: 9999px;
+  border-radius: 2px;
   font-size: 12px;
   font-weight: 500;
   color: var(--color-ink-muted);
@@ -288,7 +291,7 @@ input:focus-visible, button:focus-visible {
   border-color: var(--color-ink-faint);
 }
 .toc-pill.is-active {
-  color: #fff;
+  color: #1c1917;
   background: var(--color-accent);
   border-color: var(--color-accent);
   font-weight: 600;
@@ -300,7 +303,7 @@ input:focus-visible, button:focus-visible {
   justify-content: center;
   width: 28px;
   height: 28px;
-  border-radius: 6px;
+  border-radius: 2px;
   color: var(--color-ink-muted);
   background: var(--color-surface-elevated);
   border: 1px solid var(--color-rule);
@@ -321,7 +324,7 @@ input:focus-visible, button:focus-visible {
   justify-content: space-between;
   width: 100%;
   padding: 8px 14px;
-  border-radius: 8px;
+  border-radius: 4px;
   font-size: 13px;
   font-weight: 500;
   color: var(--color-ink);
@@ -355,7 +358,7 @@ input:focus-visible, button:focus-visible {
   right: 0;
   background: var(--color-surface-elevated);
   border: 1px solid var(--color-rule);
-  border-radius: 10px;
+  border-radius: 4px;
   padding: 4px;
   list-style: none;
   max-height: 260px;
@@ -369,7 +372,7 @@ input:focus-visible, button:focus-visible {
   padding: 9px 12px;
   font-size: 13px;
   color: var(--color-ink-secondary);
-  border-radius: 6px;
+  border-radius: 2px;
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
@@ -382,10 +385,10 @@ input:focus-visible, button:focus-visible {
 /* ── Section stacking ── */
 .section-over-hero { position: relative; z-index: 2; }
 
-/* ── Scrollbar ── */
+/* ── Scrollbar (dark) ── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--color-surface); }
-::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: #57534e; border-radius: 2px; }
 
 /* ── Skip to content ── */
 .skip-to-content {
@@ -395,7 +398,7 @@ input:focus-visible, button:focus-visible {
   z-index: 100;
   padding: 1rem;
   background: var(--color-accent);
-  color: #fff;
+  color: #1c1917;
   font-weight: 600;
 }
 .skip-to-content:focus {
@@ -403,7 +406,7 @@ input:focus-visible, button:focus-visible {
   top: 1rem;
 }
 
-/* ── Blog prose ── */
+/* ── Blog prose (dark) ── */
 .prose { color: var(--color-ink-secondary); line-height: 1.8; font-size: 1.0625rem; }
 .prose > *:first-child { margin-top: 0; }
 
@@ -411,7 +414,7 @@ input:focus-visible, button:focus-visible {
   color: var(--color-ink);
   font-size: 1.625rem;
   font-weight: 700;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
   margin-top: 3rem;
   margin-bottom: 1rem;
   line-height: 1.2;
@@ -445,14 +448,14 @@ input:focus-visible, button:focus-visible {
   padding: 1rem 1.25rem;
   margin: 2rem 0;
   background: var(--color-accent-muted);
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 4px 4px 0;
   color: var(--color-ink);
   font-style: normal;
 }
 .prose blockquote p:last-child { margin-bottom: 0; }
 
 .prose hr { border: none; border-top: 1px solid var(--color-rule); margin: 2.5rem 0; }
-.prose code { font-family: var(--font-mono); font-size: 0.85em; background: var(--color-surface-elevated); padding: 0.2em 0.45em; border-radius: 5px; color: var(--color-accent); }
+.prose code { font-family: var(--font-mono); font-size: 0.85em; background: var(--color-surface-elevated); padding: 0.2em 0.45em; border-radius: 2px; color: var(--color-accent); }
 
 .prose .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1.5rem 0; }
 .prose table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; min-width: 480px; }

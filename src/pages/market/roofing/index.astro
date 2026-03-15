@@ -197,7 +197,7 @@ const jsonLd = [
         {marketData.states.map((state) => (
           <a
             href={`/market/roofing/${state.slug}/`}
-            class="rounded-xl border border-rule bg-surface-alt/60 p-5 hover:border-accent/40 transition-colors"
+            class="rounded-sm border border-rule bg-surface-alt/60 p-5 hover:border-accent/40 transition-colors"
           >
             <p class="font-bold text-ink">{state.stateName}</p>
             <p class="text-xs text-ink-muted mt-1">
@@ -215,7 +215,7 @@ const jsonLd = [
         {marketData.cities.map((city) => (
           <a
             href={`/market/roofing/${city.slug}/`}
-            class="rounded-xl border border-rule bg-surface-alt/60 p-4 hover:border-accent/40 transition-colors"
+            class="rounded-sm border border-rule bg-surface-alt/60 p-4 hover:border-accent/40 transition-colors"
           >
             <p class="font-semibold text-ink text-sm">{city.city}, {city.state}</p>
             <p class="text-xs text-ink-muted mt-0.5">{city.totalLeads} sites · {city.avgDeepScore}/100</p>
@@ -231,7 +231,7 @@ const jsonLd = [
         {marketData.problems.map((problem) => (
           <a
             href={`/market/roofing/${problem.slug}/`}
-            class="rounded-xl border border-rule bg-surface-alt/60 p-4 hover:border-accent/40 transition-colors"
+            class="rounded-sm border border-rule bg-surface-alt/60 p-4 hover:border-accent/40 transition-colors"
           >
             <p class="font-semibold text-ink text-sm">{problem.gap}</p>
             <p class="text-xs text-ink-muted mt-0.5">{Math.round(problem.nationalFrequency * 100)}% of sites affected</p>

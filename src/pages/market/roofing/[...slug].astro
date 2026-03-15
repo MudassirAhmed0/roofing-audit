@@ -146,7 +146,7 @@ const { type, state, city, problem, problemState } = Astro.props;
       <div class="px-6 md:px-12 lg:px-16 space-y-2">
         {/* State vs National delta card */}
         <section data-reveal class="pb-6">
-          <div class="rounded-xl border border-rule bg-surface-alt/60 p-5 inline-flex items-baseline gap-3">
+          <div class="rounded-sm border border-rule bg-surface-alt/60 p-5 inline-flex items-baseline gap-3">
             <span class="text-sm text-ink-secondary">{s.stateName} vs. National:</span>
             <span class={`text-2xl font-bold ${deltaColor}`}>{deltaLabel}</span>
             <span class="text-xs text-ink-muted">points on the Index</span>
@@ -257,7 +257,7 @@ const { type, state, city, problem, problemState } = Astro.props;
             {marketData.cities.filter((c) => c.state === s.state).map((c) => (
               <a
                 href={`/market/roofing/${c.slug}/`}
-                class="rounded-xl border border-rule bg-surface-alt/60 p-4 hover:border-accent/40 transition-colors"
+                class="rounded-sm border border-rule bg-surface-alt/60 p-4 hover:border-accent/40 transition-colors"
               >
                 <p class="font-semibold text-ink text-sm">{c.city}</p>
                 <p class="text-xs text-ink-muted mt-0.5">{c.totalLeads} sites · {c.avgDeepScore}/100</p>
@@ -685,7 +685,7 @@ const { type, state, city, problem, problemState } = Astro.props;
               .map((rp) => (
                 <a
                   href={`/market/roofing/${rp.slug}/`}
-                  class="rounded-xl border border-rule bg-surface-alt/60 p-4 hover:border-accent/40 transition-colors"
+                  class="rounded-sm border border-rule bg-surface-alt/60 p-4 hover:border-accent/40 transition-colors"
                 >
                   <p class="font-semibold text-ink text-sm">{rp.gap}</p>
                   <p class="text-xs text-ink-muted mt-0.5">{Math.round(rp.nationalFrequency * 100)}% affected</p>
@@ -781,7 +781,7 @@ const { type, state, city, problem, problemState } = Astro.props;
       <div class="px-6 md:px-12 lg:px-16 space-y-2">
         {/* Delta Card */}
         <section data-reveal class="pb-6">
-          <div class="rounded-xl border border-rule bg-surface-alt/60 p-5 inline-flex items-baseline gap-3">
+          <div class="rounded-sm border border-rule bg-surface-alt/60 p-5 inline-flex items-baseline gap-3">
             <span class="text-sm text-ink-secondary">{ps.stateName} vs. National:</span>
             <span class={`text-2xl font-bold ${deltaColor}`}>{deltaLabel}pp</span>
             <span class="text-xs text-ink-muted">{delta > 0 ? "worse" : delta < 0 ? "better" : "same"} than national average</span>
@@ -834,10 +834,10 @@ const { type, state, city, problem, problemState } = Astro.props;
         {/* Links */}
         <section data-reveal class="py-8 border-t border-rule">
           <div class="flex flex-wrap gap-3">
-            <a href={`/market/roofing/${p.slug}/`} class="rounded-lg border border-rule bg-surface-alt/60 px-4 py-2 text-sm text-accent hover:border-accent/40 transition-colors">
+            <a href={`/market/roofing/${p.slug}/`} class="rounded-sm border border-rule bg-surface-alt/60 px-4 py-2 text-sm text-accent hover:border-accent/40 transition-colors">
               ← National {p.gap} Report
             </a>
-            <a href={`/market/roofing/${ps.slug}/`} class="rounded-lg border border-rule bg-surface-alt/60 px-4 py-2 text-sm text-accent hover:border-accent/40 transition-colors">
+            <a href={`/market/roofing/${ps.slug}/`} class="rounded-sm border border-rule bg-surface-alt/60 px-4 py-2 text-sm text-accent hover:border-accent/40 transition-colors">
               {ps.stateName} Roofing Report →
             </a>
           </div>

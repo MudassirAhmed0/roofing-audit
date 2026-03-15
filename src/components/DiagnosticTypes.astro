@@ -100,12 +100,12 @@ const segments = [
     {segments.map((seg, i) => (
       <a
         href={seg.href}
-        class={`group block rounded-xl border ${seg.color.border} ${seg.color.bg} p-6 md:p-8 transition-all duration-300`}
+        class={`group block rounded-sm border ${seg.color.border} ${seg.color.bg} p-6 md:p-8 transition-all duration-300`}
         data-reveal
         style={`--delay: ${i * 100}ms`}
       >
         <div class="flex items-start gap-4">
-          <div class={`flex-none w-10 h-10 rounded-lg ${seg.color.statBg} flex items-center justify-center`}>
+          <div class={`flex-none w-10 h-10 rounded-sm ${seg.color.statBg} flex items-center justify-center`}>
             <svg class={`w-5 h-5 ${seg.color.text}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d={seg.icon} />
             </svg>

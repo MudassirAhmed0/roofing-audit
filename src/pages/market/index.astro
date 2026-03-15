@@ -59,7 +59,7 @@ const jsonLd = [
         <h2 class="text-lg font-bold tracking-tight mb-4">National Report</h2>
         <a
           href="/market/roofing/"
-          class="block rounded-xl border border-rule bg-surface-alt/60 p-6 hover:border-accent/40 transition-colors"
+          class="block rounded-sm border border-rule bg-surface-alt/60 p-6 hover:border-accent/40 transition-colors"
         >
           <p class="text-xl font-bold text-ink mb-1">Roofing Website Report: {marketData.national?.totalLeads ?? 0} Sites Analyzed</p>
           <p class="text-sm text-ink-secondary">
@@ -76,7 +76,7 @@ const jsonLd = [
           {marketData.states.map((state) => (
             <a
               href={`/market/roofing/${state.slug}/`}
-              class="rounded-xl border border-rule bg-surface-alt/60 p-5 hover:border-accent/40 transition-colors"
+              class="rounded-sm border border-rule bg-surface-alt/60 p-5 hover:border-accent/40 transition-colors"
             >
               <p class="font-bold text-ink">{state.stateName}</p>
               <p class="text-xs text-ink-muted mt-1">{state.totalLeads} sites audited · Score: {state.avgDeepScore}/100</p>
@@ -92,7 +92,7 @@ const jsonLd = [
           {marketData.cities.map((city) => (
             <a
               href={`/market/roofing/${city.slug}/`}
-              class="rounded-xl border border-rule bg-surface-alt/60 p-4 hover:border-accent/40 transition-colors"
+              class="rounded-sm border border-rule bg-surface-alt/60 p-4 hover:border-accent/40 transition-colors"
             >
               <p class="font-semibold text-ink text-sm">{city.city}, {city.state}</p>
               <p class="text-xs text-ink-muted mt-0.5">{city.totalLeads} sites · {city.avgDeepScore}/100</p>
@@ -108,7 +108,7 @@ const jsonLd = [
           {marketData.problems.map((problem) => (
             <a
               href={`/market/roofing/${problem.slug}/`}
-              class="rounded-xl border border-rule bg-surface-alt/60 p-4 hover:border-accent/40 transition-colors"
+              class="rounded-sm border border-rule bg-surface-alt/60 p-4 hover:border-accent/40 transition-colors"
             >
               <p class="font-semibold text-ink text-sm">{problem.gap}</p>
               <p class="text-xs text-ink-muted mt-0.5">{Math.round(problem.nationalFrequency * 100)}% of Roofing sites affected</p>
