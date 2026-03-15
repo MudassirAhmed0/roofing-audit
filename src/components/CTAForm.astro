@@ -1,0 +1,175 @@
+---
+const formspreeUrl = import.meta.env.PUBLIC_FORMSPREE_URL || "";
+---
+
+<section
+  id="audit"
+  class="section-over-hero bg-surface-alt py-20 md:py-36 px-6 md:px-12 lg:px-16 border-t border-rule"
+
+  aria-labelledby="cta-heading"
+>
+  <div class="flex flex-col lg:flex-row gap-10 lg:gap-20">
+    <!-- Left — copy -->
+    <div class="lg:w-1/2">
+      <p data-reveal class="text-xs text-accent font-mono tracking-widest uppercase mb-8">
+        Free Audit
+      </p>
+      <h2
+        id="cta-heading"
+        data-reveal
+        style="--delay: 100ms"
+        class="text-3xl md:text-5xl font-bold leading-[0.95] tracking-tight mb-8"
+      >
+        Get your free<br />
+        <span class="text-accent">Roofing website audit.</span>
+      </h2>
+      <p
+        data-reveal
+        style="--delay: 200ms"
+        class="text-ink-secondary text-base md:text-lg leading-relaxed max-w-md mb-6 lg:mb-10"
+      >
+        Enter your website and email. We scan speed, SEO, security, mobile, CTAs, reviews, contact access, and your competitors — then send you a full diagnostic with dollar-impact numbers within 48 hours.
+      </p>
+
+      <!-- Trust signals -->
+      <div data-reveal style="--delay: 300ms" class="space-y-4">
+        <div class="flex items-center gap-3">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M13.5 4.5L6.5 11.5L2.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-success" />
+          </svg>
+          <span class="text-sm text-ink-secondary">No credit card required</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M13.5 4.5L6.5 11.5L2.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-success" />
+          </svg>
+          <span class="text-sm text-ink-secondary">No contract or sales call</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M13.5 4.5L6.5 11.5L2.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-success" />
+          </svg>
+          <span class="text-sm text-ink-secondary">10 audits per week — each manually reviewed</span>
+        </div>
+      </div>
+
+      <!-- Founder -->
+      <div data-reveal style="--delay: 400ms" class="mt-6 pt-6 lg:mt-10 lg:pt-8 border-t border-rule-light">
+        <p class="text-sm text-ink-muted leading-relaxed max-w-sm">
+          Built by <span class="text-ink font-medium">Mudassir Ahmed</span> — I audit contractor websites every week and find the same issues killing calls.
+        </p>
+      </div>
+    </div>
+
+    <!-- Right — form -->
+    <div class="lg:w-1/2 lg:pt-12">
+      <form
+        id="audit-form"
+        data-reveal
+        style="--delay: 200ms"
+        class="flex flex-col gap-4"
+        action={formspreeUrl}
+        method="POST"
+        aria-label="Request a free Roofing website audit"
+      >
+        <input type="hidden" name="_subject" value="New Roofing Audit Request" />
+        <input type="text" name="_gotcha" style="display:none" />
+        <div>
+          <label for="business_name" class="block text-[11px] font-mono text-ink-secondary uppercase tracking-widest mb-2">Business Name</label>
+          <input
+            type="text"
+            id="business_name"
+            name="business_name"
+            placeholder="e.g. Mike's Heating & Air"
+            required
+            autocomplete="organization"
+            class="w-full px-5 py-4 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+          />
+        </div>
+        <div>
+          <label for="website" class="block text-[11px] font-mono text-ink-secondary uppercase tracking-widest mb-2">Website URL</label>
+          <input
+            type="text"
+            id="website"
+            name="website"
+            placeholder="e.g. mikesheating.com"
+            required
+            autocomplete="url"
+            pattern="[a-zA-Z0-9][-a-zA-Z0-9]*\.[a-zA-Z]{2,}.*"
+            title="Enter your domain, e.g. mikesheating.com"
+            class="w-full px-5 py-4 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+          />
+        </div>
+        <div>
+          <label for="email" class="block text-[11px] font-mono text-ink-secondary uppercase tracking-widest mb-2">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Where we send your report"
+            required
+            autocomplete="email"
+            class="w-full px-5 py-4 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+          />
+        </div>
+        <div class="mt-1">
+          <button
+            type="submit"
+            id="audit-submit"
+            class="w-full px-5 py-3.5 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-colors duration-300 cursor-pointer"
+          >
+            Run My Free Audit
+          </button>
+          <p class="text-center text-xs text-ink-muted mt-3 font-mono">Takes 30 seconds</p>
+        </div>
+      </form>
+
+      <!-- Success message (hidden by default) -->
+      <div id="audit-success" class="hidden text-center py-12">
+        <div class="w-14 h-14 rounded-full bg-success/15 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-7 h-7 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-2">We're on it.</h3>
+        <p class="text-sm text-ink-secondary max-w-xs mx-auto">Your audit is being prepared. You'll receive the full diagnostic report at your email within 48 hours.</p>
+      </div>
+
+      <script>
+        const form = document.getElementById("audit-form") as HTMLFormElement;
+        const success = document.getElementById("audit-success")!;
+        const submitBtn = document.getElementById("audit-submit") as HTMLButtonElement;
+        const defaultText = "Run My Free Audit";
+
+        function showError() {
+          submitBtn.textContent = "Something went wrong — try again";
+          submitBtn.disabled = false;
+          setTimeout(() => { submitBtn.textContent = defaultText; }, 3000);
+        }
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          if (submitBtn.disabled) return;
+          submitBtn.textContent = "Sending...";
+          submitBtn.disabled = true;
+
+          try {
+            const res = await fetch(form.action, {
+              method: "POST",
+              body: new FormData(form),
+              headers: { Accept: "application/json" },
+            });
+            if (res.ok) {
+              form.classList.add("hidden");
+              success.classList.remove("hidden");
+            } else {
+              showError();
+            }
+          } catch {
+            showError();
+          }
+        });
+      </script>
+    </div>
+  </div>
+</section>

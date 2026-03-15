@@ -1,0 +1,501 @@
+---
+import Base from "../../layouts/Base.astro";
+import CTAForm from "../../components/CTAForm.astro";
+import PrivateReport from "../../components/PrivateReport.astro";
+import {
+  reports,
+  privateReports,
+  severityColors,
+  severityOrder,
+  categoryLabels,
+  categoryIcons,
+  type Report,
+  type Gap,
+} from "../../data/reports";
+import marketData from "../../data/market-data.json";
+
+export function getStaticPaths() {
+  const publicPaths = reports.map((r) => ({
+    params: { slug: r.slug },
+    props: { report: r, isPrivate: false },
+  }));
+  const privatePaths = privateReports.map((r) => ({
+    params: { slug: r.slug },
+    props: { report: r, isPrivate: true },
+  }));
+  return [...publicPaths, ...privatePaths];
+}
+
+const { report, isPrivate } = Astro.props as { report: Report; isPrivate: boolean };
+const { businessSummary: biz, gapSummary: gaps, impactEstimate: impact } = report;
+const qualityScore = report.websiteQualityScore || report.totalScore;
+
+// Sort gaps by severity
+const sortedGaps = [...gaps].sort(
+  (a, b) => severityOrder[a.severity] - severityOrder[b.severity]
+);
+
+// Group gaps by category for the summary
+const categories = [...new Set(gaps.map((g) => g.category))];
+const gapsByCategory = categories.map((cat) => ({
+  category: cat,
+  label: categoryLabels[cat] || cat,
+  icon: categoryIcons[cat] || categoryIcons.business,
+  gaps: gaps.filter((g) => g.category === cat),
+  count: gaps.filter((g) => g.category === cat).length,
+}));
+
+// Severity counts
+const criticalCount = gaps.filter((g) => g.severity === "critical").length;
+const highCount = gaps.filter((g) => g.severity === "high").length;
+const mediumCount = gaps.filter((g) => g.severity === "medium").length;
+const lowCount = gaps.filter((g) => g.severity === "low").length;
+
+// Score ring values
+const scorePercent = qualityScore;
+const circumference = 2 * Math.PI * 54;
+const strokeDashoffset = circumference - (scorePercent / 100) * circumference;
+const scoreColor =
+  scorePercent >= 80 ? "#10b981" : scorePercent >= 60 ? "#f59e0b" : "#f87171";
+
+// Diagnostic type styling
+const diagnosticColors: Record<string, { bg: string; border: string; text: string; icon: string }> = {
+  "blind-spender": { bg: "bg-red-500/8", border: "border-red-500/25", text: "text-red-400", icon: "M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" },
+  "pretty-and-broken": { bg: "bg-orange-500/8", border: "border-orange-500/25", text: "text-orange-400", icon: "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" },
+  "half-built": { bg: "bg-yellow-500/8", border: "border-yellow-500/25", text: "text-yellow-400", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
+  "invisible": { bg: "bg-sky-500/8", border: "border-sky-500/25", text: "text-sky-400", icon: "M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" },
+};
+const diagType = biz.diagnosticType || "blind-spender";
+const diagStyle = diagnosticColors[diagType] || diagnosticColors["blind-spender"];
+
+const siteUrl = import.meta.env.SITE_URL || "https://roofingaudit.co";
+const reportUrl = `${siteUrl}/report/${report.slug}/`;
+const title = `Website Audit Report — ${report.name}`;
+const description = `Free diagnostic report for ${report.domain}. ${gaps.length} issues found — estimated ${impact.missedLeads} missed leads per month.`;
+
+const jsonLd = isPrivate ? [] : [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: title,
+    description,
+    url: reportUrl,
+    publisher: { "@type": "Organization", name: "Roofing Audit", url: siteUrl },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Reports", item: `${siteUrl}/reports/` },
+      { "@type": "ListItem", position: 3, name: report.name, item: reportUrl },
+    ],
+  },
+];
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} noindex={true}>
+  {isPrivate && <PrivateReport report={report} />}
+
+  {!isPrivate && (<Fragment>
+  <!-- Hero + Diagnostic Banner -->
+  <section class="relative pt-28 pb-8 sm:pt-32 sm:pb-10">
+    <div class="mx-auto max-w-4xl px-5">
+      <div class="hero-reveal">
+        <p class="font-mono text-xs tracking-widest uppercase text-ink-muted mb-3">
+          Website Diagnostic Report
+        </p>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.1]">
+          {report.name}
+        </h1>
+        <p class="mt-3 text-ink-secondary text-lg">
+          {report.domain} &middot; {report.city}, {report.state}
+        </p>
+      </div>
+
+      {/* Diagnostic Type Banner */}
+      {biz.diagnosticType && (
+        <div class={`mt-8 rounded-xl border ${diagStyle.border} ${diagStyle.bg} px-5 py-5 sm:px-6 sm:py-6`} data-reveal style="--delay:80ms">
+          <div class="flex items-start gap-4">
+            <div class={`flex-none w-10 h-10 rounded-lg ${diagStyle.bg} flex items-center justify-center`}>
+              <svg class={`w-5 h-5 ${diagStyle.text}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d={diagStyle.icon} />
+              </svg>
+            </div>
+            <div>
+              <p class={`text-xs font-mono uppercase tracking-widest ${diagStyle.text} mb-1`}>{biz.diagnosticLabel}</p>
+              <p class="text-lg sm:text-xl font-bold leading-snug">{biz.diagnosticHeadline}</p>
+              <p class="mt-2 text-sm text-ink-secondary leading-relaxed">{biz.diagnosticDescription}</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Score + Revenue Impact -->
+  <section class="py-8 sm:py-10">
+    <div class="mx-auto max-w-4xl px-5">
+      <div class="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-8 items-start" data-reveal style="--delay:100ms">
+        <!-- Score Ring -->
+        <div class="flex flex-col items-center gap-2">
+          <div class="relative w-32 h-32">
+            <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
+              <circle
+                cx="60" cy="60" r="54"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="8"
+                class="text-rule"
+              />
+              <circle
+                cx="60" cy="60" r="54"
+                fill="none"
+                stroke={scoreColor}
+                stroke-width="8"
+                stroke-linecap="round"
+                stroke-dasharray={circumference}
+                stroke-dashoffset={strokeDashoffset}
+              />
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span class="text-3xl font-bold" style={`color:${scoreColor}`}>{scorePercent}</span>
+              <span class="text-[11px] text-ink-muted font-mono">/100</span>
+            </div>
+          </div>
+          <span class="text-xs text-ink-muted font-mono">Website Quality Score</span>
+          <span class="text-[11px] text-ink-faint font-mono">Avg. Roofing site: 34</span>
+        </div>
+
+        <!-- Summary Stats -->
+        <div>
+          <p class="text-ink-secondary leading-relaxed">{biz.oneLiner}</p>
+
+          <div class="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+            <div class="rounded-lg border border-rule bg-surface-alt/50 px-3 py-2.5 sm:px-4 sm:py-3">
+              <p class="text-[10px] text-ink-muted font-mono uppercase tracking-wide">Issues</p>
+              <p class="mt-1 text-xl sm:text-2xl font-bold leading-tight">{gaps.length}</p>
+            </div>
+            <div class="rounded-lg border border-danger/30 bg-danger/5 px-3 py-2.5 sm:px-4 sm:py-3">
+              <p class="text-[10px] text-ink-muted font-mono uppercase tracking-wide">Lost/Month</p>
+              <p class="mt-1 text-xl sm:text-2xl font-bold text-danger leading-tight">{biz.estimatedTotalMonthlyCost}</p>
+            </div>
+            <div class="rounded-lg border border-rule bg-surface-alt/50 px-3 py-2.5 sm:px-4 sm:py-3">
+              <p class="text-[10px] text-ink-muted font-mono uppercase tracking-wide">Missed Leads</p>
+              <p class="mt-1 text-xl sm:text-2xl font-bold text-danger leading-tight">{impact.missedLeads}<span class="text-xs font-normal text-ink-muted">/mo</span></p>
+            </div>
+            <div class="rounded-lg border border-rule bg-surface-alt/50 px-3 py-2.5 sm:px-4 sm:py-3">
+              <p class="text-[10px] text-ink-muted font-mono uppercase tracking-wide">Rating</p>
+              <p class="mt-1 text-xl sm:text-2xl font-bold leading-tight">
+                {report.rating}<span class="text-warning text-base">&#9733;</span>
+              </p>
+              <p class="text-[10px] text-ink-muted">({(report.reviewCount ?? 0).toLocaleString()})</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Severity Breakdown Bar -->
+  <section class="py-8 border-t border-b border-rule">
+    <div class="mx-auto max-w-4xl px-5">
+      <div class="flex items-center gap-6 flex-wrap" data-reveal>
+        <span class="text-xs font-mono text-ink-muted uppercase tracking-wide">Severity:</span>
+        {criticalCount > 0 && (
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+            <span class="text-sm font-medium">{criticalCount} Critical</span>
+          </div>
+        )}
+        {highCount > 0 && (
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
+            <span class="text-sm font-medium">{highCount} High</span>
+          </div>
+        )}
+        {mediumCount > 0 && (
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+            <span class="text-sm font-medium">{mediumCount} Medium</span>
+          </div>
+        )}
+        {lowCount > 0 && (
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+            <span class="text-sm font-medium">{lowCount} Low</span>
+          </div>
+        )}
+      </div>
+
+      <!-- Stacked bar -->
+      <div class="mt-4 h-2 rounded-full bg-rule overflow-hidden flex">
+        {criticalCount > 0 && (
+          <div class="bg-red-500 h-full" style={`width:${(criticalCount / gaps.length) * 100}%`}></div>
+        )}
+        {highCount > 0 && (
+          <div class="bg-orange-500 h-full" style={`width:${(highCount / gaps.length) * 100}%`}></div>
+        )}
+        {mediumCount > 0 && (
+          <div class="bg-yellow-500 h-full" style={`width:${(mediumCount / gaps.length) * 100}%`}></div>
+        )}
+        {lowCount > 0 && (
+          <div class="bg-blue-500 h-full" style={`width:${(lowCount / gaps.length) * 100}%`}></div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- Revenue Impact Math -->
+  <section class="py-14 sm:py-20">
+    <div class="mx-auto max-w-4xl px-5">
+      <h2 class="text-2xl sm:text-3xl font-bold tracking-tight" data-reveal>
+        How We Estimated the Impact
+      </h2>
+      <p class="mt-2 text-ink-secondary text-sm" data-reveal style="--delay:60ms">
+        Conservative estimate based on industry data. Here's the math.
+      </p>
+
+      <div class="mt-8 rounded-xl border border-rule bg-surface-alt/40 overflow-hidden" data-reveal style="--delay:120ms">
+        <!-- Step 1 -->
+        <div class="px-5 py-4 flex items-baseline gap-3 border-b border-rule/50">
+          <span class="text-xs font-mono text-ink-faint w-16 flex-none">Visitors</span>
+          <p class="text-sm text-ink-secondary">
+            ~<span class="font-semibold text-ink">{impact.monthlyVisitors.toLocaleString()}</span> estimated monthly visitors
+          </p>
+        </div>
+        <!-- Step 2 -->
+        <div class="px-5 py-4 flex items-baseline gap-3 border-b border-rule/50">
+          <span class="text-xs font-mono text-ink-faint w-16 flex-none">Bounce</span>
+          <p class="text-sm text-ink-secondary">
+            <span class="font-semibold text-ink">{impact.bouncePercent}%</span> leave due to {impact.bounceReason}
+            <span class="text-ink-muted"> = ~{impact.bouncedVisitors} lost visitors</span>
+          </p>
+        </div>
+        <!-- Step 3 -->
+        <div class="px-5 py-4 flex items-baseline gap-3 border-b border-rule/50">
+          <span class="text-xs font-mono text-ink-faint w-16 flex-none">Booking</span>
+          <p class="text-sm text-ink-secondary">
+            At a <span class="font-semibold text-ink">{impact.bookingRate}%</span> booking rate, that's
+            <span class="font-semibold text-danger"> {impact.missedLeads} missed jobs/month</span>
+          </p>
+        </div>
+        <!-- Step 4 -->
+        <div class="px-5 py-4 flex items-baseline gap-3 border-b border-rule/50">
+          <span class="text-xs font-mono text-ink-faint w-16 flex-none">Revenue</span>
+          <p class="text-sm text-ink-secondary">
+            At <span class="font-semibold text-ink">${impact.avgServiceCall}</span> avg service call =
+            <span class="font-semibold text-danger"> {impact.missedRepairRevenue}/month</span> in missed repairs
+          </p>
+        </div>
+        <!-- Install note -->
+        <div class="px-5 py-4 bg-warning/5">
+          <p class="text-sm text-ink-secondary">
+            <span class="font-semibold text-warning">Plus installs:</span> {impact.installNote}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Top 3 Gaps (callout) -->
+  <section class="py-14 sm:py-20 border-t border-rule">
+    <div class="mx-auto max-w-4xl px-5">
+      <h2 class="text-2xl sm:text-3xl font-bold tracking-tight" data-reveal>
+        Top 3 Issues Costing You Money
+      </h2>
+
+      <div class="mt-8 space-y-4">
+        {biz.topThreeGaps.map((gap, i) => (
+          <div
+            class="flex items-start gap-4 rounded-xl border border-rule bg-surface-alt/40 px-5 py-4"
+            data-reveal
+            style={`--delay:${(i + 1) * 80}ms`}
+          >
+            <span class="flex-none mt-0.5 w-8 h-8 rounded-lg bg-danger/15 text-danger flex items-center justify-center font-bold text-sm font-mono">
+              {i + 1}
+            </span>
+            <p class="text-ink leading-relaxed">{gap}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Seasonal Urgency Banner -->
+  <section class="py-6 bg-warning/8 border-t border-b border-warning/20">
+    <div class="mx-auto max-w-4xl px-5 flex items-start gap-3" data-reveal>
+      <svg class="w-5 h-5 text-warning flex-none mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <p class="text-sm text-ink-secondary leading-relaxed">
+        <span class="font-semibold text-warning">Timing:</span> {biz.seasonalUrgency}
+      </p>
+    </div>
+  </section>
+
+  <!-- Full Gap List -->
+  <section class="py-14 sm:py-20">
+    <div class="mx-auto max-w-4xl px-5">
+      <h2 class="text-2xl sm:text-3xl font-bold tracking-tight" data-reveal>
+        All Issues ({gaps.length})
+      </h2>
+      <p class="mt-2 text-ink-secondary" data-reveal style="--delay:60ms">
+        Sorted by severity. Click any issue to see details and estimated impact.
+      </p>
+
+      <div class="mt-8 space-y-3">
+        {sortedGaps.map((gap, i) => {
+          const colors = severityColors[gap.severity];
+          const catLabel = categoryLabels[gap.category] || gap.category;
+          return (
+            <details
+              class={`group rounded-xl border ${colors.border} ${colors.bg} overflow-hidden`}
+              data-reveal
+              style={`--delay:${Math.min(i * 40, 400)}ms`}
+            >
+              <summary class="px-4 py-3.5 sm:px-5 sm:py-4 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden">
+                <div class="flex items-start gap-2.5">
+                  <span class={`flex-none w-2.5 h-2.5 rounded-full mt-1.5 ${colors.dot}`}></span>
+                  <div class="flex-1 min-w-0">
+                    <span class="font-medium text-sm sm:text-base leading-snug block">{gap.gap}</span>
+                    <div class="mt-1.5 flex items-center gap-2">
+                      <span class={`text-[10px] font-mono font-semibold ${colors.text} uppercase`}>
+                        {gap.severity}
+                      </span>
+                      <span class="text-[10px] font-mono text-ink-muted hidden sm:inline">
+                        {catLabel}
+                      </span>
+                    </div>
+                  </div>
+                  <svg class="w-4 h-4 text-ink-muted flex-none mt-1 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </summary>
+              <div class="px-4 pb-4 pt-1 sm:px-5 sm:pb-5 border-t border-rule/50">
+                <p class="text-sm text-ink-secondary leading-relaxed">{gap.impact}</p>
+                <div class="mt-3 flex items-center gap-4 flex-wrap">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-xs font-mono text-ink-muted">Est. cost:</span>
+                    <span class="text-sm font-semibold text-danger">{gap.estimatedMonthlyCost}/mo</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-xs font-mono text-ink-muted">Fix effort:</span>
+                    <span class={`text-sm font-medium ${gap.fixEffort === "quick-win" ? "text-success" : gap.fixEffort === "moderate" ? "text-warning" : "text-danger"}`}>
+                      {gap.fixEffort === "quick-win" ? "Quick Win" : gap.fixEffort === "moderate" ? "Moderate" : "Major Project"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </details>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- Category Breakdown -->
+  <section class="py-14 sm:py-20 bg-surface-alt/50 border-t border-rule">
+    <div class="mx-auto max-w-4xl px-5">
+      <h2 class="text-2xl sm:text-3xl font-bold tracking-tight" data-reveal>
+        Issues by Category
+      </h2>
+
+      <div class="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {gapsByCategory.sort((a, b) => b.count - a.count).map((cat, i) => (
+          <div
+            class="rounded-xl border border-rule bg-surface px-4 py-4"
+            data-reveal
+            style={`--delay:${i * 60}ms`}
+          >
+            <div class="flex items-center gap-2 mb-2">
+              <svg class="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d={cat.icon} />
+              </svg>
+              <span class="text-xs font-mono text-ink-muted uppercase tracking-wide">{cat.label}</span>
+            </div>
+            <p class="text-2xl font-bold">{cat.count}</p>
+            <p class="text-xs text-ink-muted mt-0.5">
+              {cat.count === 1 ? "issue" : "issues"}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Competitive Position -->
+  <section class="py-14 sm:py-20 border-t border-rule">
+    <div class="mx-auto max-w-4xl px-5">
+      <h2 class="text-2xl sm:text-3xl font-bold tracking-tight" data-reveal>
+        Competitive Position
+      </h2>
+      <p class="mt-4 text-ink-secondary leading-relaxed max-w-2xl" data-reveal style="--delay:60ms">
+        {biz.competitivePosition}
+      </p>
+    </div>
+  </section>
+
+  <!-- Recommended Fix -->
+  <section class="py-14 sm:py-20 bg-accent/5 border-t border-b border-accent/20">
+    <div class="mx-auto max-w-4xl px-5">
+      <h2 class="text-2xl sm:text-3xl font-bold tracking-tight" data-reveal>
+        Recommended First Step
+      </h2>
+
+      <div class="mt-8 rounded-xl border border-accent/30 bg-surface px-6 py-7" data-reveal style="--delay:80ms">
+        <p class="text-lg text-ink leading-relaxed font-medium">{biz.recommendedFirstProject}</p>
+
+        <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="rounded-lg bg-accent/8 px-4 py-3 sm:py-4 sm:text-center flex sm:block items-center justify-between">
+            <p class="text-[10px] font-mono text-ink-muted uppercase tracking-wide">Fix Cost</p>
+            <p class="sm:mt-1 text-lg sm:text-xl font-bold text-accent">{biz.recommendedFirstProjectPrice}</p>
+          </div>
+          <div class="rounded-lg bg-accent/8 px-4 py-3 sm:py-4 sm:text-center flex sm:block items-center justify-between">
+            <p class="text-[10px] font-mono text-ink-muted uppercase tracking-wide">Timeline</p>
+            <p class="sm:mt-1 text-lg sm:text-xl font-bold text-accent">{biz.recommendedFirstProjectTimeline}</p>
+          </div>
+          <div class="rounded-lg bg-success/8 px-4 py-3 sm:py-4 sm:text-center flex sm:block items-center justify-between">
+            <p class="text-[10px] font-mono text-ink-muted uppercase tracking-wide">Missed Repairs/mo</p>
+            <p class="sm:mt-1 text-lg sm:text-xl font-bold text-success">{impact.missedRepairRevenue}</p>
+          </div>
+        </div>
+        <p class="mt-4 text-xs text-ink-muted">
+          {impact.installNote}
+        </p>
+
+        <div class="mt-6 pt-5 border-t border-rule">
+          <p class="text-xs font-mono text-ink-muted uppercase tracking-wide mb-2">Long-term opportunity</p>
+          <p class="text-sm text-ink-secondary leading-relaxed">{biz.growthOpportunity}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Market Page Link */}
+  {(() => {
+    const marketCity = marketData.cities.find(
+      (c) => c.city === report.city && c.state === report.state
+    );
+    if (!marketCity) return null;
+    return (
+      <section class="py-10 border-t border-rule">
+        <div class="mx-auto max-w-4xl px-5" data-reveal>
+          <p class="text-sm text-ink-secondary">
+            See how all Roofing websites in {report.city} compare →
+          </p>
+          <a
+            href={`/market/roofing/${marketCity.slug}/`}
+            class="inline-block mt-2 text-accent hover:text-accent-hover font-medium transition-colors"
+          >
+            {report.city} Roofing Website Report ({marketCity.totalLeads} sites audited)
+          </a>
+        </div>
+      </section>
+    );
+  })()}
+
+  <CTAForm />
+  </Fragment>)}
+</Base>

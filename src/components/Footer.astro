@@ -1,0 +1,102 @@
+---
+import marketData from "../data/market-data.json";
+
+const year = new Date().getFullYear();
+
+const topCities = marketData.cities
+  .sort((a, b) => b.totalLeads - a.totalLeads)
+  .slice(0, 6);
+---
+
+<footer class="border-t border-rule px-6 md:px-12 lg:px-16 pt-16 pb-8">
+  <!-- Top: brand + nav columns -->
+  <div class="flex flex-col gap-12 lg:flex-row lg:justify-between lg:gap-8">
+    <!-- Brand + tagline -->
+    <div class="max-w-xs">
+      <a href="/" class="flex items-center gap-2.5 group mb-4">
+        <svg width="28" height="28" viewBox="0 0 100 100" fill="none" class="shrink-0" aria-hidden="true">
+          <path d="M40 12 L10 22V50Q10 85 40 95Q70 85 70 50V22L40 12Z" fill="#fff" stroke="#18181b" stroke-width="8" stroke-linejoin="round"/>
+          <path d="M22 47L38 63L82 19" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M22 47L38 63L82 19" stroke="#059669" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M85 33Q85 45 97 45Q85 45 85 57Q85 45 73 45Q85 45 85 33Z" fill="#059669"/>
+        </svg>
+        <span class="text-sm font-semibold tracking-tight">Roofing Audit</span>
+      </a>
+      <p class="text-sm text-ink-muted leading-relaxed">
+        Free website audits for Roofing contractors. We find what's costing you calls and fix it.
+      </p>
+    </div>
+
+    <!-- Navigation columns -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-12">
+      <!-- Company -->
+      <div>
+        <p class="text-[10px] font-mono font-semibold uppercase tracking-widest text-ink-faint mb-4">Company</p>
+        <ul class="space-y-3">
+          <li><a href="/about/" class="text-sm text-ink-secondary hover:text-accent transition-colors duration-300">About</a></li>
+          <li><a href="/blog/" class="text-sm text-ink-secondary hover:text-accent transition-colors duration-300">Blog</a></li>
+          <li><a href="/reports/" class="text-sm text-ink-secondary hover:text-accent transition-colors duration-300">Audit Reports</a></li>
+          <li><a href="/market/" class="text-sm text-ink-secondary hover:text-accent transition-colors duration-300">Market Research</a></li>
+        </ul>
+      </div>
+
+      <!-- Research -->
+      <div>
+        <p class="text-[10px] font-mono font-semibold uppercase tracking-widest text-ink-faint mb-4">Research</p>
+        <ul class="space-y-3">
+          <li><a href="/market/roofing/" class="text-sm text-ink-secondary hover:text-accent transition-colors duration-300">National Report</a></li>
+          {marketData.states.map((state) => (
+            <li><a href={`/market/roofing/${state.slug}/`} class="text-sm text-ink-secondary hover:text-accent transition-colors duration-300">{state.stateName}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Top Cities -->
+      <div>
+        <p class="text-[10px] font-mono font-semibold uppercase tracking-widest text-ink-faint mb-4">Top Cities</p>
+        <ul class="space-y-3">
+          {topCities.map((city) => (
+            <li><a href={`/market/roofing/${city.slug}/`} class="text-sm text-ink-secondary hover:text-accent transition-colors duration-300">{city.city}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Connect -->
+      <div>
+        <p class="text-[10px] font-mono font-semibold uppercase tracking-widest text-ink-faint mb-4">Connect</p>
+        <ul class="space-y-3">
+          <li><a href="mailto:contact@roofingaudit.co" class="text-sm text-ink-secondary hover:text-accent transition-colors duration-300">contact@roofingaudit.co</a></li>
+          <li><a href="https://www.linkedin.com/company/112202285" target="_blank" rel="noopener noreferrer" class="text-sm text-ink-secondary hover:text-accent transition-colors duration-300">LinkedIn</a></li>
+          <li><a href="https://www.instagram.com/roofingaudit.co/" target="_blank" rel="noopener noreferrer" class="text-sm text-ink-secondary hover:text-accent transition-colors duration-300">Instagram</a></li>
+          <li><a href="https://www.facebook.com/profile.php?id=61587724066026" target="_blank" rel="noopener noreferrer" class="text-sm text-ink-secondary hover:text-accent transition-colors duration-300">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="lg:text-right">
+      <p class="text-sm font-semibold mb-2">See what's wrong with your site.</p>
+      <a
+        href="/#audit"
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent text-white text-xs font-semibold uppercase tracking-wide hover:bg-accent-hover transition-colors duration-300"
+      >
+        Free Audit
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="border-t border-rule mt-12 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+    <p class="text-xs text-ink-faint">
+      &copy; {year} Roofing Audit. All rights reserved.
+    </p>
+    <div class="flex items-center gap-6">
+      <a href="/privacy/" class="text-xs text-ink-faint hover:text-ink-secondary transition-colors duration-300">Privacy</a>
+      <a href="/terms/" class="text-xs text-ink-faint hover:text-ink-secondary transition-colors duration-300">Terms</a>
+      <a href="/sitemap.xml" class="text-xs text-ink-faint hover:text-ink-secondary transition-colors duration-300">Sitemap</a>
+    </div>
+  </div>
+</footer>

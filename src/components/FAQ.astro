@@ -1,0 +1,139 @@
+---
+const faqs = [
+  {
+    question: "What exactly do you audit?",
+    answer: "We run a comprehensive 8-point diagnostic: page speed, mobile experience, SEO health, SSL security, CTA clarity, review integration, contact accessibility, and a competitor gap analysis. You get a full report with specific dollar-impact estimates for each issue.",
+  },
+  {
+    question: "Is the audit really free?",
+    answer: "Yes. No credit card, no contract, no catch. We audit your site, deliver the report, and walk you through it. If you want us to fix what we found, we'll give you a quote. If not, you keep the report — it's yours.",
+  },
+  {
+    question: "How long does the audit take?",
+    answer: "We deliver your full diagnostic report within 48 hours of receiving your URL. Most are done in under 24. You'll get a detailed breakdown of every issue with priority rankings.",
+  },
+  {
+    question: "I already have a website. Do I really need this?",
+    answer: "That's exactly who this is for. A website that exists isn't the same as a website that works. We've audited 1,200+ roofing sites — the average scores 37/100. Most are missing online booking, pricing info, and trust signals that turn visitors into customers.",
+  },
+  {
+    question: "What if my site is fine?",
+    answer: "Then we'll tell you that. We don't manufacture problems. If your site scores well across all 8 points, we'll congratulate you — and maybe suggest one or two optimizations to squeeze out more leads.",
+  },
+  {
+    question: "How do you calculate the revenue impact?",
+    answer: "Average roofing job is $150-$300. If your site is missing booking, pricing, and trust signals — 74% of roofing sites are — you're losing potential customers at every step. Even losing 5 bookings a month at $200 average is $1,000/month. If one of those became a weekly recurring client, that's $800-$1,000/month from a single customer.",
+  },
+];
+---
+
+<section
+  class="section-over-hero bg-surface-alt py-20 md:py-44 px-6 md:px-12 lg:px-16 relative border-t border-rule"
+
+  aria-labelledby="faq-heading"
+>
+  <div class="relative z-10">
+    <div class="flex flex-col lg:flex-row gap-12 lg:gap-20 mb-16 md:mb-20">
+      <div class="lg:w-1/3">
+        <p data-reveal class="text-xs text-accent font-mono tracking-widest uppercase">
+          FAQ
+        </p>
+      </div>
+      <div class="lg:w-2/3">
+        <h2
+          id="faq-heading"
+          data-reveal
+          style="--delay: 100ms"
+          class="text-3xl md:text-5xl font-bold leading-[0.95] tracking-tight"
+        >
+          Questions you're<br class="hidden md:block" />
+          probably <span class="text-accent">asking.</span>
+        </h2>
+      </div>
+    </div>
+
+    <div class="lg:ml-auto lg:w-2/3 lg:pl-0" id="faq-list" role="list">
+      {
+        faqs.map((faq, i) => (
+          <div
+            class="border-t border-rule-light"
+            data-reveal
+            style={`--delay: ${i * 70}ms`}
+            data-faq-item
+            role="listitem"
+          >
+            <button
+              class="w-full flex items-center justify-between py-6 md:py-8 text-left group cursor-pointer"
+              aria-expanded="false"
+              aria-controls={`faq-panel-${i}`}
+              id={`faq-btn-${i}`}
+            >
+              <span class="text-base md:text-lg font-semibold tracking-tight pr-8 group-hover:text-accent transition-colors duration-300">
+                {faq.question}
+              </span>
+              <span class="faq-arrow w-8 h-8 rounded-full border border-rule-light flex items-center justify-center shrink-0 transition-all duration-500 group-hover:border-accent group-hover:bg-accent-muted" aria-hidden="true">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  class="transition-transform duration-500"
+                >
+                  <path
+                    d="M6 2.5v7M2.5 6h7"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+            </button>
+            <div
+              id={`faq-panel-${i}`}
+              role="region"
+              aria-labelledby={`faq-btn-${i}`}
+              class="faq-content overflow-hidden transition-all duration-500 ease-out"
+              style="max-height: 0"
+            >
+              <p class="pb-8 text-ink-secondary text-sm md:text-base leading-relaxed pr-12">
+                {faq.answer}
+              </p>
+            </div>
+          </div>
+        ))
+      }
+      <div class="border-t border-rule-light" data-reveal-line style="--delay: 420ms"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll("[data-faq-item]").forEach((item) => {
+    const btn = item.querySelector("button");
+    const content = item.querySelector(".faq-content") as HTMLElement | null;
+    const icon = item.querySelector(".faq-arrow svg") as SVGElement | null;
+
+    btn?.addEventListener("click", () => {
+      const isOpen = btn.getAttribute("aria-expanded") === "true";
+
+      document.querySelectorAll("[data-faq-item]").forEach((other) => {
+        if (other !== item) {
+          const ob = other.querySelector("button");
+          const oc = other.querySelector(".faq-content") as HTMLElement | null;
+          const oi = other.querySelector(".faq-arrow svg") as SVGElement | null;
+          ob?.setAttribute("aria-expanded", "false");
+          if (oc) oc.style.maxHeight = "0";
+          if (oi) oi.style.transform = "rotate(0deg)";
+        }
+      });
+
+      btn.setAttribute("aria-expanded", String(!isOpen));
+      if (content) {
+        content.style.maxHeight = isOpen ? "0" : content.scrollHeight + "px";
+      }
+      if (icon) {
+        icon.style.transform = isOpen ? "rotate(0deg)" : "rotate(45deg)";
+      }
+    });
+  });
+</script>

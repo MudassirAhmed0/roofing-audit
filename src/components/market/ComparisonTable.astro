@@ -1,0 +1,74 @@
+---
+interface Row {
+  name: string;
+  slug: string;
+  leads: number;
+  score: number;
+  speed: number;
+  booking: number;
+  ssl: number;
+  reviews: number;
+}
+
+interface Props {
+  rows: Row[];
+  highlightSlug?: string;
+  linkPrefix?: string;
+}
+
+const { rows, highlightSlug, linkPrefix = "/market/roofing/" } = Astro.props;
+
+function bestInCol(col: keyof Row, lower = false) {
+  const vals = rows.map((r) => r[col] as number);
+  return lower ? Math.min(...vals) : Math.max(...vals);
+}
+
+const bestScore = bestInCol("score");
+const bestSpeed = bestInCol("speed", true);
+const bestBooking = bestInCol("booking");
+---
+
+<div data-reveal class="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+  <table class="w-full text-sm min-w-[640px]">
+    <thead>
+      <tr class="border-b-2 border-rule">
+        <th class="text-left py-3 pr-4 text-ink font-semibold">Market</th>
+        <th class="text-right py-3 px-3 text-ink font-semibold">Sites</th>
+        <th class="text-right py-3 px-3 text-ink font-semibold">Index Score</th>
+        <th class="text-right py-3 px-3 text-ink font-semibold">Avg Speed</th>
+        <th class="text-right py-3 px-3 text-ink font-semibold">Online Booking</th>
+        <th class="text-right py-3 px-3 text-ink font-semibold">SSL</th>
+        <th class="text-right py-3 pl-3 text-ink font-semibold">Reviews</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((row) => {
+        const isHighlighted = row.slug === highlightSlug;
+        const rowClass = isHighlighted
+          ? "border-b border-accent/20 bg-accent/5"
+          : "border-b border-rule/60 hover:bg-surface-alt/40";
+        return (
+          <tr class={rowClass}>
+            <td class="py-3 pr-4">
+              <a href={`${linkPrefix}${row.slug}/`} class="text-accent hover:text-accent-hover font-medium transition-colors">
+                {row.name}
+              </a>
+            </td>
+            <td class="text-right py-3 px-3 text-ink-secondary font-mono text-xs">{row.leads}</td>
+            <td class={`text-right py-3 px-3 font-mono text-xs ${row.score === bestScore ? "text-success font-semibold" : "text-ink-secondary"}`}>
+              {row.score}/100
+            </td>
+            <td class={`text-right py-3 px-3 font-mono text-xs ${row.speed === bestSpeed ? "text-success font-semibold" : "text-ink-secondary"}`}>
+              {row.speed}s
+            </td>
+            <td class={`text-right py-3 px-3 font-mono text-xs ${row.booking === bestBooking ? "text-success font-semibold" : "text-ink-secondary"}`}>
+              {Math.round(row.booking * 100)}%
+            </td>
+            <td class="text-right py-3 px-3 text-ink-secondary font-mono text-xs">{Math.round(row.ssl * 100)}%</td>
+            <td class="text-right py-3 pl-3 text-ink-secondary font-mono text-xs">{Math.round(row.reviews * 100)}%</td>
+          </tr>
+        );
+      })}
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,67 @@
+---
+import Base from "../../layouts/Base.astro";
+import BlogList from "../../components/BlogList.astro";
+import ReportPreview from "../../components/ReportPreview.astro";
+import { getCollection } from "astro:content";
+
+const formspreeUrl = import.meta.env.PUBLIC_FORMSPREE_URL || "";
+const PAGE_1_COUNT = 9; // 1 featured + 8 grid = no orphan
+const POSTS_PER_PAGE = 8;
+
+const allPosts = (await getCollection("blog")).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+const remaining = allPosts.length - PAGE_1_COUNT;
+const totalPages = remaining > 0 ? 1 + Math.ceil(remaining / POSTS_PER_PAGE) : 1;
+const pagePosts = allPosts.slice(0, PAGE_1_COUNT);
+
+const page = {
+  currentPage: 1,
+  lastPage: totalPages,
+  data: pagePosts,
+  url: {
+    prev: undefined as string | undefined,
+    next: totalPages > 1 ? "/blog/page/2/" : undefined as string | undefined,
+  },
+};
+
+const siteUrl = "https://roofingaudit.co";
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: "Roofing Audit Blog",
+    description: "Insights on Roofing website performance, lead generation, and what's costing contractors money online.",
+    url: `${siteUrl}/blog/`,
+    publisher: {
+      "@type": "Organization",
+      name: "Roofing Audit",
+      url: siteUrl,
+      logo: { "@type": "ImageObject", url: `${siteUrl}/og-image.png` },
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${siteUrl}/blog/` },
+    ],
+  },
+];
+---
+
+<Base
+  title="Blog — Roofing Audit"
+  description="Insights on Roofing website performance, lead generation, and what's costing contractors money online."
+  jsonLd={jsonLd}
+  nextUrl={page.url.next}
+>
+  <section class="pt-28 pb-20 sm:pt-32 sm:pb-28">
+    <BlogList page={page} formspreeUrl={formspreeUrl} />
+  </section>
+
+  <ReportPreview />
+</Base>

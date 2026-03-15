@@ -1,0 +1,78 @@
+---
+---
+
+<section
+  class="relative min-h-[100svh] bg-surface flex flex-col overflow-hidden"
+>
+  <!-- Subtle accent gradient -->
+  <div class="absolute top-0 right-0 w-1/2 h-full opacity-[0.04] pointer-events-none"
+    style="background: radial-gradient(ellipse at 70% 30%, var(--color-accent), transparent 70%);"
+    aria-hidden="true">
+  </div>
+
+  <div class="relative z-10 flex-1 flex flex-col justify-between px-6 md:px-12 lg:px-16 pt-24 md:pt-32 pb-12 md:pb-16">
+    <!-- Headline area -->
+    <div class="flex-1 flex flex-col justify-center max-w-5xl">
+      <p
+        class="hero-reveal inline-flex items-center gap-2 text-xs text-accent font-mono tracking-wide mb-8 md:mb-10"
+      >
+        <span class="w-1.5 h-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+        Free Website Audit
+      </p>
+
+      <h1 class="text-[clamp(2.5rem,7vw,6.5rem)] font-bold leading-[0.9] tracking-[-0.04em]">
+        <span class="hero-reveal block" style="--delay: 100ms">Your roofing website</span>
+        <span class="hero-reveal block" style="--delay: 200ms">looks fine. It's</span>
+        <span class="hero-reveal block" style="--delay: 300ms">
+          <em class="text-accent not-italic">quietly broken.</em>
+        </span>
+      </h1>
+
+      <p
+        class="hero-reveal max-w-[38rem] text-base md:text-lg text-ink-secondary leading-relaxed mt-8"
+        style="--delay: 400ms"
+      >
+        We audited 1,200+ roofing company websites. The average site scores
+        <span class="text-accent font-semibold">37 out of 100.</span>
+        Most are missing online booking, pricing pages, and basic trust signals — and losing jobs because of it.
+      </p>
+
+      <div class="hero-reveal mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6" style="--delay: 500ms">
+        <a
+          href="#audit"
+          class="inline-flex items-center gap-3 px-7 py-3.5 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-colors duration-300 whitespace-nowrap"
+        >
+          Find Out What's Broken
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+        <span class="text-xs text-ink-muted font-mono">Free &middot; 48hr turnaround</span>
+      </div>
+    </div>
+
+    <!-- Bottom stats bar -->
+    <div class="hero-reveal border-t border-rule pt-8" style="--delay: 600ms">
+      <div class="flex flex-col md:flex-row items-start md:items-end justify-between gap-8 md:gap-12">
+        <div class="flex gap-8 sm:gap-12 md:gap-20">
+          <div>
+            <span class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-ink">37</span>
+            <span class="block text-[10px] text-ink-muted mt-1.5 font-mono uppercase tracking-widest">Avg Site Score</span>
+          </div>
+          <div>
+            <span class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-ink">74%</span>
+            <span class="block text-[10px] text-ink-muted mt-1.5 font-mono uppercase tracking-widest">No Online Booking</span>
+          </div>
+          <div>
+            <span class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-ink">65%</span>
+            <span class="block text-[10px] text-ink-muted mt-1.5 font-mono uppercase tracking-widest">No Contact Form</span>
+          </div>
+        </div>
+
+        <p class="max-w-xs text-[11px] text-ink-muted leading-relaxed md:text-right font-mono">
+          Based on our audit of 1,200+ roofing businesses across 11 states.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,56 @@
+---
+interface Props {
+  totalLeads: number;
+  deepAudited: number;
+  lastUpdated: string;
+}
+
+const { totalLeads, deepAudited, lastUpdated } = Astro.props;
+const formattedDate = new Date(lastUpdated).toLocaleDateString("en-US", {
+  month: "long",
+  year: "numeric",
+});
+---
+
+<section data-reveal class="py-12 border-t border-rule" id="methodology">
+  <h2 class="text-xl sm:text-2xl font-bold tracking-tight mb-6">How We Audit Roofing Websites</h2>
+
+  <div class="grid gap-6 lg:grid-cols-2">
+    <div>
+      <h3 class="text-sm font-semibold text-ink mb-2">Data Collection</h3>
+      <p class="text-sm text-ink-secondary leading-relaxed mb-4">
+        We identify Roofing businesses through Google Maps, then visit each company's website using a headless browser that simulates a real visitor. Every site is checked for speed, security, lead capture, trust signals, SEO fundamentals, mobile experience, and content depth.
+      </p>
+
+      <h3 class="text-sm font-semibold text-ink mb-2">What We Measure</h3>
+      <ul class="text-sm text-ink-secondary leading-relaxed space-y-1 mb-4">
+        <li>Page load speed (headless browser measurement)</li>
+        <li>SSL security and HTTPS redirect</li>
+        <li>Lead capture: online booking, contact forms, click-to-call, after-hours capture</li>
+        <li>Trust signals: reviews displayed, license numbers, industry certifications</li>
+        <li>SEO fundamentals: meta tags, structured data, XML sitemap</li>
+        <li>Mobile experience: responsive design, sticky contact options</li>
+        <li>Content depth: service area pages, about page, blog</li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-semibold text-ink mb-2">Scoring</h3>
+      <p class="text-sm text-ink-secondary leading-relaxed mb-4">
+        Each website receives an Roofing Website Index score from 0 to 100 based on six weighted categories: Speed (20%), Trust (20%), Lead Capture (25%), SEO (15%), Content (10%), and Mobile (10%).
+      </p>
+
+      <h3 class="text-sm font-semibold text-ink mb-2">Sample Size</h3>
+      <p class="text-sm text-ink-secondary leading-relaxed mb-4">
+        This report is based on {totalLeads.toLocaleString()} Roofing websites, of which {deepAudited.toLocaleString()} received in-depth audits with 100+ data points each.
+      </p>
+
+      <h3 class="text-sm font-semibold text-ink mb-2">Limitations</h3>
+      <p class="text-sm text-ink-secondary leading-relaxed mb-4">
+        Our audits measure website quality, not business quality. A company with a low-scoring website may still provide excellent Roofing service. Scores reflect online presence only.
+      </p>
+
+      <p class="text-xs text-ink-faint font-mono">Last updated: {formattedDate}</p>
+    </div>
+  </div>
+</section>

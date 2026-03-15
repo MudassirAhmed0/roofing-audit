@@ -1,0 +1,108 @@
+---
+interface Props {
+  market?: string;
+}
+
+const { market = "" } = Astro.props;
+const formspreeUrl = import.meta.env.PUBLIC_FORMSPREE_URL || "";
+const ctaTitle = market
+  ? `Get Your Free ${market} Roofing Website Audit`
+  : "Get Your Free Roofing Website Audit";
+const formId = "market-cta-form";
+const successId = "market-cta-success";
+const submitId = "market-cta-submit";
+---
+
+<section data-reveal class="py-16 border-t border-rule">
+  <div class="max-w-xl mx-auto text-center">
+    <h2 class="text-2xl sm:text-3xl font-bold tracking-tight mb-3">{ctaTitle}</h2>
+    <p class="text-sm text-ink-secondary mb-8">
+      See how your website scores on the Roofing Website Index. Full report in 48 hours — no cost, no strings.
+    </p>
+
+    <form
+      id={formId}
+      class="flex flex-col gap-3 text-left"
+      action={formspreeUrl}
+      method="POST"
+      aria-label={ctaTitle}
+    >
+      <input type="hidden" name="_subject" value={`Market Page Audit Request — ${market || 'National'}`} />
+      <input type="text" name="_gotcha" style="display:none" />
+      <input
+        type="text"
+        name="business_name"
+        placeholder="Business name"
+        required
+        autocomplete="organization"
+        class="w-full px-4 py-3.5 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+      />
+      <input
+        type="text"
+        name="website"
+        placeholder="yoursite.com"
+        required
+        autocomplete="url"
+        class="w-full px-4 py-3.5 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+      />
+      <input
+        type="email"
+        name="email"
+        placeholder="Email for report"
+        required
+        autocomplete="email"
+        class="w-full px-4 py-3.5 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+      />
+      <button
+        type="submit"
+        id={submitId}
+        class="w-full px-5 py-3.5 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-colors duration-300 cursor-pointer"
+      >
+        Run My Free Audit
+      </button>
+    </form>
+
+    <div id={successId} class="hidden py-8">
+      <div class="w-10 h-10 rounded-full bg-success/15 flex items-center justify-center mx-auto mb-3">
+        <svg class="w-5 h-5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <p class="text-sm font-semibold mb-1">We're on it.</p>
+      <p class="text-xs text-ink-muted">Report in your inbox within 48 hours.</p>
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ formId, successId, submitId }}>
+  const form = document.getElementById(formId);
+  const success = document.getElementById(successId);
+  const btn = document.getElementById(submitId);
+  if (form && success && btn) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (btn.disabled) return;
+      btn.textContent = "Sending...";
+      btn.disabled = true;
+      try {
+        const res = await fetch(form.action, {
+          method: "POST",
+          body: new FormData(form),
+          headers: { Accept: "application/json" },
+        });
+        if (res.ok) {
+          form.classList.add("hidden");
+          success.classList.remove("hidden");
+        } else {
+          btn.textContent = "Something went wrong";
+          btn.disabled = false;
+          setTimeout(() => { btn.textContent = "Run My Free Audit"; }, 3000);
+        }
+      } catch {
+        btn.textContent = "Something went wrong";
+        btn.disabled = false;
+        setTimeout(() => { btn.textContent = "Run My Free Audit"; }, 3000);
+      }
+    });
+  }
+</script>

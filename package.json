@@ -1,0 +1,25 @@
+{
+  "name": "roofing-audit",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "sync-reports": "node --env-file=.env scripts/sync-reports.mjs",
+    "sync-market": "node --env-file=.env scripts/sync-market-data.mjs",
+    "inventory": "node --env-file=.env scripts/inventory-market-data.mjs",
+    "sync-all": "node --env-file=.env scripts/sync-reports.mjs && node --env-file=.env scripts/sync-market-data.mjs",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.0",
+    "@tailwindcss/vite": "^4.2.1",
+    "astro": "^5.17.1",
+    "tailwindcss": "^4.2.1"
+  },
+  "devDependencies": {
+    "pg": "^8.20.0",
+    "playwright": "^1.58.2"
+  }
+}

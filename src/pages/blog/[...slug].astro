@@ -1,0 +1,519 @@
+---
+import Base from "../../layouts/Base.astro";
+import ReportPreview from "../../components/ReportPreview.astro";
+import { getCollection, render } from "astro:content";
+
+const formspreeUrl = import.meta.env.PUBLIC_FORMSPREE_URL || "";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/\.md$/, "") },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const siteUrl = import.meta.env.SITE_URL || Astro.site?.href?.replace(/\/$/, "") || "https://roofingaudit.co";
+const postUrl = `${siteUrl}/blog/${post.id.replace(/\.md$/, "")}/`;
+const shareText = encodeURIComponent(post.data.title);
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.data.title,
+    description: post.data.description,
+    image: `${siteUrl}${post.data.cover}`,
+    datePublished: post.data.date.toISOString(),
+    dateModified: (post.data.lastModified || post.data.date).toISOString(),
+    mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
+    author: {
+      "@type": "Person",
+      name: "Mudassir Ahmed",
+      url: `${siteUrl}/about/`,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Roofing Audit",
+      url: siteUrl,
+      logo: { "@type": "ImageObject", url: `${siteUrl}/og-image.png` },
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${siteUrl}/blog/` },
+      { "@type": "ListItem", position: 3, name: post.data.title, item: postUrl },
+    ],
+  },
+];
+---
+
+<Base
+  title={post.data.title}
+  description={post.data.description}
+  ogImage={post.data.cover}
+  jsonLd={jsonLd}
+>
+  <!-- Sticky TOC bar -->
+  <nav id="toc-bar" class="toc-bar" aria-label="Table of contents">
+    <!-- Desktop: horizontal pills -->
+    <div class="toc-desktop">
+      <span class="toc-label">In this article</span>
+      <button class="toc-arrow toc-arrow-left" id="toc-left" aria-label="Scroll left" tabindex="-1">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="toc-pills" id="toc-pills"></div>
+      <button class="toc-arrow toc-arrow-right" id="toc-right" aria-label="Scroll right" tabindex="-1">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+    <!-- Mobile: custom dropdown -->
+    <div class="toc-mobile">
+      <span class="toc-label">In this article</span>
+      <div class="toc-dropdown" id="toc-dropdown">
+        <button class="toc-dropdown-trigger" id="toc-dropdown-trigger" aria-expanded="false" aria-haspopup="listbox" aria-label="Jump to section">
+          <span class="toc-dropdown-text" id="toc-dropdown-text">Select section</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="toc-dropdown-chevron"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <ul class="toc-dropdown-menu" id="toc-dropdown-menu" role="listbox"></ul>
+      </div>
+    </div>
+  </nav>
+
+  <article>
+    <div class="px-6 md:px-12 lg:px-16 pt-28 sm:pt-32 pb-20 sm:pb-28">
+      <!-- Header (full width) -->
+      <div class="mb-10">
+        <a
+          href="/blog/"
+          class="hero-reveal inline-flex items-center gap-1.5 text-xs font-mono text-ink-muted hover:text-accent transition-colors mb-6"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          All posts
+        </a>
+        <h1 class="hero-reveal text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.1]" style="--delay:60ms">
+          {post.data.title}
+        </h1>
+        <p class="hero-reveal mt-4 text-ink-secondary text-lg leading-relaxed max-w-3xl" style="--delay:120ms">
+          {post.data.description}
+        </p>
+        <div class="hero-reveal mt-5 flex items-center justify-between flex-wrap gap-4" style="--delay:160ms">
+          <div class="flex items-center gap-3 text-xs font-mono text-ink-muted">
+            <time datetime={post.data.date.toISOString().slice(0, 10)}>
+              {post.data.date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+            </time>
+            <span class="text-rule">|</span>
+            <span>{post.data.readTime}</span>
+            <span class="text-rule">|</span>
+            <span>By <a href="/about/" class="text-ink-secondary hover:text-accent transition-colors">Mudassir Ahmed</a></span>
+          </div>
+
+          <!-- Share -->
+          <div class="flex items-center gap-2" data-nosnippet>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-ink-faint mr-2">Share</span>
+            <a
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-10 h-10 rounded-lg border border-rule flex items-center justify-center text-ink-muted hover:text-accent hover:border-accent/40 transition-colors duration-300"
+              aria-label="Share on LinkedIn"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </a>
+            <a
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-10 h-10 rounded-lg border border-rule flex items-center justify-center text-ink-muted hover:text-accent hover:border-accent/40 transition-colors duration-300"
+              aria-label="Share on Facebook"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a
+              href={`https://twitter.com/intent/tweet?text=${shareText}&url=${encodeURIComponent(postUrl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-10 h-10 rounded-lg border border-rule flex items-center justify-center text-ink-muted hover:text-accent hover:border-accent/40 transition-colors duration-300"
+              aria-label="Share on X"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <button
+              id="copy-link-btn"
+              class="w-8 h-8 rounded-lg border border-rule flex items-center justify-center text-ink-muted hover:text-accent hover:border-accent/40 transition-colors duration-300 cursor-pointer"
+              aria-label="Copy link"
+              data-url={postUrl}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-6 xl:gap-8">
+        <!-- Left: image + content -->
+        <div class="min-w-0 flex-1">
+          <!-- Cover image -->
+          <div class="rounded-xl overflow-hidden border border-rule shadow-[0_20px_60px_rgba(0,0,0,0.4)]" data-reveal style="--delay:200ms">
+            <img
+              src={post.data.cover}
+              alt={post.data.title}
+              width="1080"
+              height="540"
+              class="w-full aspect-[2/1] object-cover"
+              loading="eager"
+              fetchpriority="high"
+            />
+          </div>
+
+          <!-- Content -->
+          <div class="prose mt-10">
+            <Content />
+          </div>
+        </div>
+
+        <!-- Right: sticky form (desktop only) -->
+        <aside class="hidden lg:block w-[300px] xl:w-[320px] flex-none" data-nosnippet>
+          <div class="sticky top-24" data-reveal style="--delay:300ms">
+            <div class="rounded-xl border border-rule bg-surface-alt/60 p-6">
+              <p class="text-lg font-bold tracking-tight mb-1">
+                Free audit
+              </p>
+              <p class="text-xs text-ink-muted mb-5">
+                Full report in 48 hours. No strings.
+              </p>
+
+              <form
+                id="blog-audit-form"
+                class="flex flex-col gap-3"
+                action={formspreeUrl}
+                method="POST"
+                aria-label="Request a free Roofing website audit"
+              >
+                <input type="hidden" name="_subject" value="Blog Audit Request" />
+                <input type="text" name="_gotcha" style="display:none" />
+                <input
+                  type="text"
+                  name="business_name"
+                  placeholder="Business name"
+                  required
+                  autocomplete="organization"
+                  class="w-full px-4 py-3 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+                />
+                <input
+                  type="text"
+                  name="website"
+                  placeholder="yoursite.com"
+                  required
+                  autocomplete="url"
+                  class="w-full px-4 py-3 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+                />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email for report"
+                  required
+                  autocomplete="email"
+                  class="w-full px-4 py-3 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+                />
+                <button
+                  type="submit"
+                  id="blog-audit-submit"
+                  class="w-full px-5 py-3.5 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-colors duration-300 cursor-pointer"
+                >
+                  Run My Free Audit
+                </button>
+              </form>
+
+              <!-- Success -->
+              <div id="blog-audit-success" class="hidden text-center py-6">
+                <div class="w-10 h-10 rounded-full bg-success/15 flex items-center justify-center mx-auto mb-3">
+                  <svg class="w-5 h-5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <p class="text-sm font-semibold mb-1">We're on it.</p>
+                <p class="text-xs text-ink-muted">Report in your inbox within 48 hours.</p>
+              </div>
+
+              <!-- Trust -->
+              <div class="mt-4 pt-4 border-t border-rule/60 space-y-2">
+                <div class="flex items-center gap-2">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M13.5 4.5L6.5 11.5L2.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-success" />
+                  </svg>
+                  <span class="text-[11px] text-ink-muted">No credit card</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M13.5 4.5L6.5 11.5L2.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-success" />
+                  </svg>
+                  <span class="text-[11px] text-ink-muted">No sales call</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M13.5 4.5L6.5 11.5L2.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-success" />
+                  </svg>
+                  <span class="text-[11px] text-ink-muted">Manually reviewed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Mobile form (below content) -->
+      <div class="lg:hidden mt-16 rounded-xl border border-accent/20 bg-accent/5 px-6 py-8" data-reveal data-nosnippet>
+        <p class="text-xl font-bold tracking-tight mb-1">
+          Want to know your score?
+        </p>
+        <p class="text-sm text-ink-secondary mb-5">
+          Drop your URL — full report in 48 hours.
+        </p>
+        <form
+          id="blog-audit-form-mobile"
+          class="flex flex-col gap-3"
+          action={formspreeUrl}
+          method="POST"
+          aria-label="Request a free Roofing website audit"
+        >
+          <input type="hidden" name="_subject" value="Blog Audit Request (Mobile)" />
+          <input type="text" name="_gotcha" style="display:none" />
+          <input
+            type="text"
+            name="business_name"
+            placeholder="Business name"
+            required
+            class="w-full px-4 py-3.5 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+          />
+          <input
+            type="text"
+            name="website"
+            placeholder="yoursite.com"
+            required
+            class="w-full px-4 py-3.5 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email for report"
+            required
+            class="w-full px-4 py-3.5 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+          />
+          <button
+            type="submit"
+            id="blog-audit-submit-mobile"
+            class="w-full px-5 py-3.5 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-colors duration-300 cursor-pointer"
+          >
+            Run My Free Audit
+          </button>
+        </form>
+        <div id="blog-audit-success-mobile" class="hidden text-center py-6">
+          <p class="text-sm font-semibold mb-1">We're on it.</p>
+          <p class="text-xs text-ink-muted">Report in your inbox within 48 hours.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <ReportPreview />
+
+  <script>
+    function setupForm(formId: string, successId: string, submitId: string) {
+      const form = document.getElementById(formId) as HTMLFormElement | null;
+      const success = document.getElementById(successId);
+      const btn = document.getElementById(submitId) as HTMLButtonElement | null;
+      if (!form || !success || !btn) return;
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (btn.disabled) return;
+        btn.textContent = "Sending...";
+        btn.disabled = true;
+        try {
+          const res = await fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: { Accept: "application/json" },
+          });
+          if (res.ok) {
+            form.classList.add("hidden");
+            success.classList.remove("hidden");
+          } else {
+            btn.textContent = "Something went wrong";
+            btn.disabled = false;
+            setTimeout(() => { btn.textContent = "Run My Free Audit"; }, 3000);
+          }
+        } catch {
+          btn.textContent = "Something went wrong";
+          btn.disabled = false;
+          setTimeout(() => { btn.textContent = "Run My Free Audit"; }, 3000);
+        }
+      });
+    }
+
+    setupForm("blog-audit-form", "blog-audit-success", "blog-audit-submit");
+    setupForm("blog-audit-form-mobile", "blog-audit-success-mobile", "blog-audit-submit-mobile");
+
+    // Wrap tables in scrollable container for mobile
+    document.querySelectorAll(".prose table").forEach((table) => {
+      if (table.parentElement?.classList.contains("table-wrap")) return;
+      const wrap = document.createElement("div");
+      wrap.className = "table-wrap";
+      table.parentNode!.insertBefore(wrap, table);
+      wrap.appendChild(table);
+    });
+
+    // ── Table of Contents ──
+    const tocBar = document.getElementById("toc-bar") as HTMLElement;
+    const tocPills = document.getElementById("toc-pills") as HTMLElement;
+    const tocDropdown = document.getElementById("toc-dropdown") as HTMLElement;
+    const tocTrigger = document.getElementById("toc-dropdown-trigger") as HTMLButtonElement;
+    const tocDropdownText = document.getElementById("toc-dropdown-text") as HTMLElement;
+    const tocMenu = document.getElementById("toc-dropdown-menu") as HTMLElement;
+    const tocLeft = document.getElementById("toc-left") as HTMLButtonElement;
+    const tocRight = document.getElementById("toc-right") as HTMLButtonElement;
+    const prose = document.querySelector(".prose") as HTMLElement;
+
+    if (tocBar && prose) {
+      const headings = Array.from(prose.querySelectorAll("h2")) as HTMLElement[];
+      const menuItems: HTMLElement[] = [];
+
+      headings.forEach((h, i) => {
+        if (!h.id) {
+          h.id = h.textContent!.trim().toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
+            || `section-${i}`;
+        }
+
+        // Desktop pill
+        const pill = document.createElement("a");
+        pill.href = `#${h.id}`;
+        pill.className = "toc-pill";
+        pill.textContent = h.textContent!.trim();
+        pill.dataset.idx = String(i);
+        pill.addEventListener("click", (e) => {
+          e.preventDefault();
+          h.scrollIntoView({ behavior: "smooth", block: "start" });
+          history.replaceState(null, "", `#${h.id}`);
+        });
+        tocPills.appendChild(pill);
+
+        // Mobile dropdown item
+        const li = document.createElement("li");
+        li.className = "toc-dropdown-item";
+        li.textContent = h.textContent!.trim();
+        li.setAttribute("role", "option");
+        li.dataset.id = h.id;
+        li.addEventListener("click", () => {
+          h.scrollIntoView({ behavior: "smooth", block: "start" });
+          history.replaceState(null, "", `#${h.id}`);
+          tocDropdownText.textContent = h.textContent!.trim();
+          closeDropdown();
+        });
+        tocMenu.appendChild(li);
+        menuItems.push(li);
+      });
+
+      // Set initial text
+      if (headings.length > 0) {
+        tocDropdownText.textContent = headings[0].textContent!.trim();
+      }
+
+      // Toggle dropdown
+      function closeDropdown() {
+        tocDropdown.classList.remove("is-open");
+        tocTrigger.setAttribute("aria-expanded", "false");
+      }
+      function toggleDropdown() {
+        const open = tocDropdown.classList.toggle("is-open");
+        tocTrigger.setAttribute("aria-expanded", String(open));
+      }
+
+      tocTrigger.addEventListener("click", toggleDropdown);
+
+      // Close on outside click
+      document.addEventListener("click", (e) => {
+        if (!tocDropdown.contains(e.target as Node)) closeDropdown();
+      });
+
+      // Arrow scroll buttons
+      const scrollAmt = 200;
+      tocLeft.addEventListener("click", () => tocPills.scrollBy({ left: -scrollAmt, behavior: "smooth" }));
+      tocRight.addEventListener("click", () => tocPills.scrollBy({ left: scrollAmt, behavior: "smooth" }));
+
+      function updateArrows() {
+        tocLeft.style.opacity = tocPills.scrollLeft > 10 ? "1" : "0";
+        tocLeft.style.pointerEvents = tocPills.scrollLeft > 10 ? "auto" : "none";
+        const atEnd = tocPills.scrollLeft + tocPills.clientWidth >= tocPills.scrollWidth - 10;
+        tocRight.style.opacity = atEnd ? "0" : "1";
+        tocRight.style.pointerEvents = atEnd ? "none" : "auto";
+      }
+      tocPills.addEventListener("scroll", updateArrows, { passive: true });
+      updateArrows();
+
+      // Show/hide bar based on cover image position
+      const coverImg = document.querySelector("[data-reveal]") as HTMLElement;
+
+      const showObserver = new IntersectionObserver(([entry]) => {
+        tocBar.classList.toggle("is-visible", !entry.isIntersecting);
+        if (entry.isIntersecting) closeDropdown();
+      }, { threshold: 0, rootMargin: "-64px 0px 0px 0px" });
+
+      if (coverImg) showObserver.observe(coverImg);
+
+      // Track active section
+      const pills = tocPills.querySelectorAll(".toc-pill");
+      let activeIdx = -1;
+
+      const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = headings.indexOf(entry.target as HTMLElement);
+            if (idx !== -1 && idx !== activeIdx) {
+              activeIdx = idx;
+              pills.forEach((p, j) => p.classList.toggle("is-active", j === idx));
+              menuItems.forEach((m, j) => m.classList.toggle("is-active", j === idx));
+              tocDropdownText.textContent = headings[idx].textContent!.trim();
+              const activePill = pills[idx] as HTMLElement;
+              if (activePill) {
+                const pillRect = activePill.getBoundingClientRect();
+                const containerRect = tocPills.getBoundingClientRect();
+                if (pillRect.left < containerRect.left + 40 || pillRect.right > containerRect.right - 40) {
+                  activePill.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+                }
+              }
+            }
+          }
+        });
+      }, { threshold: 0, rootMargin: "-80px 0px -70% 0px" });
+
+      headings.forEach((h) => sectionObserver.observe(h));
+    }
+
+    // Copy link button
+    const copyBtn = document.getElementById("copy-link-btn") as HTMLButtonElement | null;
+    if (copyBtn) {
+      copyBtn.addEventListener("click", async () => {
+        const url = copyBtn.dataset.url || window.location.href;
+        await navigator.clipboard.writeText(url);
+        const svg = copyBtn.querySelector("svg")!;
+        const original = svg.innerHTML;
+        svg.innerHTML = '<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+        copyBtn.classList.add("text-success", "border-success/40");
+        setTimeout(() => {
+          svg.innerHTML = original;
+          copyBtn.classList.remove("text-success", "border-success/40");
+        }, 2000);
+      });
+    }
+  </script>
+</Base>

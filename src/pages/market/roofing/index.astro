@@ -1,0 +1,253 @@
+---
+import Base from "../../../layouts/Base.astro";
+import MarketBreadcrumb from "../../../components/market/MarketBreadcrumb.astro";
+import MarketHero from "../../../components/market/MarketHero.astro";
+import StatCards from "../../../components/market/StatCards.astro";
+import ScoreDistribution from "../../../components/market/ScoreDistribution.astro";
+import GapSection from "../../../components/market/GapSection.astro";
+import ComparisonTable from "../../../components/market/ComparisonTable.astro";
+import Methodology from "../../../components/market/Methodology.astro";
+import MarketCTA from "../../../components/market/MarketCTA.astro";
+import MarketReports from "../../../components/market/MarketReports.astro";
+import marketData from "../../../data/market-data.json";
+import { gapNarratives, interpolate } from "../../../data/gap-narratives";
+
+const siteUrl = "https://roofingaudit.co";
+const n = marketData.national || {} as any;
+const topGaps = (n.topGaps || []).slice(0, 3);
+
+const stats = [
+  { label: "Roofing Website Index", value: `${n.avgDeepScore ?? 0}/100`, detail: `Median: ${n.medianDeepScore ?? 0}` },
+  { label: "Avg Load Speed", value: `${n.avgSpeed ?? 0}s` },
+  { label: "Online Booking", value: `${Math.round((n.bookingRate ?? 0) * 100)}%` },
+  { label: "SSL Secured", value: `${Math.round((n.sslRate ?? 0) * 100)}%` },
+  { label: "Reviews Displayed", value: `${Math.round((n.reviewsDisplayedRate ?? 0) * 100)}%` },
+  { label: "Clear CTA", value: `${Math.round((n.ctaRate ?? 0) * 100)}%` },
+];
+
+const stateRows = marketData.states.map((s) => ({
+  name: s.stateName,
+  slug: s.slug,
+  leads: s.totalLeads,
+  score: s.avgDeepScore,
+  speed: s.avgSpeed,
+  booking: s.bookingRate,
+  ssl: s.sslRate,
+  reviews: s.reviewsDisplayedRate,
+}));
+
+const description = `We audited ${n.totalLeads ?? 0} Roofing websites. Average score: ${n.avgDeepScore ?? 0}/100. Only ${Math.round((n.bookingRate ?? 0) * 100)}% offer online scheduling.`;
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: `Roofing Website Report: ${n.totalLeads ?? 0} Sites Analyzed`,
+    description,
+    url: `${siteUrl}/market/roofing/`,
+    dateModified: marketData.generatedAt,
+    author: { "@type": "Organization", name: "Roofing Audit", url: siteUrl },
+    publisher: { "@type": "Organization", name: "Roofing Audit", url: siteUrl, logo: { "@type": "ImageObject", url: `${siteUrl}/og-image.png`, width: 1200, height: 630 } },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Market Reports", item: `${siteUrl}/market/` },
+      { "@type": "ListItem", position: 3, name: "Roofing Website Report", item: `${siteUrl}/market/roofing/` },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: marketData.indexName,
+    description: `Analysis of ${n.totalLeads ?? 0} Roofing company websites across ${n.stateCount ?? 0} states and ${n.cityCount ?? 0} cities in the United States.`,
+    temporalCoverage: marketData.generatedAt.slice(0, 7),
+    spatialCoverage: { "@type": "Place", name: "United States" },
+    creator: { "@type": "Organization", name: "Roofing Audit", url: siteUrl },
+  },
+];
+---
+
+<Base
+  title={`Roofing Website Report: ${n.totalLeads ?? 0} Sites Analyzed | Roofing Audit`}
+  description={description}
+  jsonLd={jsonLd}
+>
+  <div class="px-6 md:px-12 lg:px-16">
+    <div class="pt-28 sm:pt-32">
+      <MarketBreadcrumb items={[
+        { name: "Home", href: "/" },
+        { name: "Market Reports", href: "/market/" },
+        { name: "Roofing Website Report" },
+      ]} />
+    </div>
+  </div>
+
+  <MarketHero
+    pretitle="National Roofing Website Report"
+    title={`We Audited ${n.totalLeads ?? 0} Roofing Websites Across the <span class="text-accent">United States</span>`}
+    subtitle={`The average Roofing website scores ${n.avgDeepScore ?? 0} out of 100 on the ${marketData.indexName}. Here's what we found.`}
+    totalAudited={n.totalLeads ?? 0}
+    lastUpdated={marketData.generatedAt}
+  />
+
+  <div class="px-6 md:px-12 lg:px-16 space-y-2">
+    <!-- National Snapshot -->
+    <section data-reveal class="pb-8">
+      <h2 class="text-lg font-bold tracking-tight mb-4">National Snapshot</h2>
+      <StatCards stats={stats} />
+    </section>
+
+    <!-- Key Finding #1 -->
+    {topGaps[0] && (() => {
+      const gap = topGaps[0];
+      const narrative = gapNarratives[gap.slug];
+      if (!narrative) return null;
+      const vars = { market: "U.S.", pct: Math.round(gap.frequency * 100), count: gap.count };
+      return (
+        <GapSection
+          heading={interpolate(narrative.heading, vars)}
+          frequency={gap.frequency}
+          count={gap.count}
+          total={n.deepAudited ?? 0}
+          severity={gap.severity}
+          whyItMatters={interpolate(narrative.whyItMatters, vars)}
+          whatTopSitesDo={interpolate(narrative.whatTopSitesDo, vars)}
+          costLine={interpolate(narrative.costLine, vars)}
+          problemSlug={gap.slug}
+          id="finding-1"
+        />
+      );
+    })()}
+
+    <!-- Score Distribution -->
+    <section class="py-8">
+      <ScoreDistribution
+        distribution={n.scoreDistribution ?? {}}
+        avgScore={n.avgDeepScore ?? 0}
+        medianScore={n.medianDeepScore ?? 0}
+        bestScore={n.bestScore ?? 0}
+        worstScore={n.worstScore ?? 0}
+      />
+    </section>
+
+    <!-- Key Finding #2 -->
+    {topGaps[1] && (() => {
+      const gap = topGaps[1];
+      const narrative = gapNarratives[gap.slug];
+      if (!narrative) return null;
+      const vars = { market: "U.S.", pct: Math.round(gap.frequency * 100), count: gap.count };
+      return (
+        <GapSection
+          heading={interpolate(narrative.heading, vars)}
+          frequency={gap.frequency}
+          count={gap.count}
+          total={n.deepAudited ?? 0}
+          severity={gap.severity}
+          whyItMatters={interpolate(narrative.whyItMatters, vars)}
+          whatTopSitesDo={interpolate(narrative.whatTopSitesDo, vars)}
+          costLine={interpolate(narrative.costLine, vars)}
+          problemSlug={gap.slug}
+          id="finding-2"
+        />
+      );
+    })()}
+
+    <!-- State Comparison -->
+    <section data-reveal class="py-8 border-t border-rule">
+      <h2 class="text-xl sm:text-2xl font-bold tracking-tight mb-6">State Comparison</h2>
+      <ComparisonTable rows={stateRows} />
+    </section>
+
+    <!-- Key Finding #3 -->
+    {topGaps[2] && (() => {
+      const gap = topGaps[2];
+      const narrative = gapNarratives[gap.slug];
+      if (!narrative) return null;
+      const vars = { market: "U.S.", pct: Math.round(gap.frequency * 100), count: gap.count };
+      return (
+        <GapSection
+          heading={interpolate(narrative.heading, vars)}
+          frequency={gap.frequency}
+          count={gap.count}
+          total={n.deepAudited ?? 0}
+          severity={gap.severity}
+          whyItMatters={interpolate(narrative.whyItMatters, vars)}
+          whatTopSitesDo={interpolate(narrative.whatTopSitesDo, vars)}
+          costLine={interpolate(narrative.costLine, vars)}
+          problemSlug={gap.slug}
+          id="finding-3"
+        />
+      );
+    })()}
+
+    <!-- Methodology -->
+    <Methodology
+      totalLeads={n.totalLeads ?? 0}
+      deepAudited={n.deepAudited ?? 0}
+      lastUpdated={marketData.generatedAt}
+    />
+
+    <!-- Explore by State -->
+    <section data-reveal class="py-8 border-t border-rule">
+      <h2 class="text-lg font-bold tracking-tight mb-4">Explore by State</h2>
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {marketData.states.map((state) => (
+          <a
+            href={`/market/roofing/${state.slug}/`}
+            class="rounded-xl border border-rule bg-surface-alt/60 p-5 hover:border-accent/40 transition-colors"
+          >
+            <p class="font-bold text-ink">{state.stateName}</p>
+            <p class="text-xs text-ink-muted mt-1">
+              {state.totalLeads} sites · Score: {state.avgDeepScore}/100
+            </p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- All Cities -->
+    <section data-reveal class="py-8 border-t border-rule">
+      <h2 class="text-lg font-bold tracking-tight mb-4">All Cities</h2>
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {marketData.cities.map((city) => (
+          <a
+            href={`/market/roofing/${city.slug}/`}
+            class="rounded-xl border border-rule bg-surface-alt/60 p-4 hover:border-accent/40 transition-colors"
+          >
+            <p class="font-semibold text-ink text-sm">{city.city}, {city.state}</p>
+            <p class="text-xs text-ink-muted mt-0.5">{city.totalLeads} sites · {city.avgDeepScore}/100</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Explore by Problem -->
+    <section data-reveal class="py-8 border-t border-rule">
+      <h2 class="text-lg font-bold tracking-tight mb-4">Explore by Problem</h2>
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {marketData.problems.map((problem) => (
+          <a
+            href={`/market/roofing/${problem.slug}/`}
+            class="rounded-xl border border-rule bg-surface-alt/60 p-4 hover:border-accent/40 transition-colors"
+          >
+            <p class="font-semibold text-ink text-sm">{problem.gap}</p>
+            <p class="text-xs text-ink-muted mt-0.5">{Math.round(problem.nationalFrequency * 100)}% of sites affected</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Real Audit Reports -->
+    <MarketReports
+      heading="Real Roofing Website Audit Reports"
+      subheading="These are real audits from our database. Click any report to see the full diagnostic."
+      limit={9}
+    />
+
+    <!-- CTA -->
+    <MarketCTA />
+  </div>
+</Base>

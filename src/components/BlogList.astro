@@ -1,0 +1,314 @@
+---
+interface PageData {
+  currentPage: number;
+  lastPage: number;
+  data: any[];
+  url: { prev: string | undefined; next: string | undefined };
+}
+
+interface Props {
+  page: PageData;
+  formspreeUrl: string;
+}
+
+const { page, formspreeUrl } = Astro.props;
+const isFirstPage = page.currentPage === 1;
+const featured = isFirstPage ? page.data[0] : null;
+const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
+---
+
+<div class="px-6 md:px-12 lg:px-16">
+  <!-- Header (full width) -->
+  <div class="hero-reveal mb-12">
+    <p class="font-mono text-xs tracking-widest uppercase text-ink-muted mb-3">
+      Blog
+    </p>
+    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.1]">
+      Insights from auditing<br />147+ Roofing websites
+    </h1>
+  </div>
+
+  <div class="flex gap-10 xl:gap-14">
+    <!-- Left: posts -->
+    <div class="min-w-0 flex-1">
+      {/* Featured post (page 1 only) */}
+      {featured && (
+        <a
+          href={`/blog/${featured.id.replace(/\.md$/, "")}/`}
+          class="group block rounded-xl border border-rule overflow-hidden bg-surface-alt/40 transition-all duration-500 hover:border-accent/30 hover:shadow-[0_0_60px_rgba(14,165,233,0.06)]"
+          data-reveal style="--delay:80ms"
+        >
+          <div class="grid grid-cols-1 md:grid-cols-2">
+            <div class="aspect-square md:aspect-auto overflow-hidden">
+              <img
+                src={featured.data.cover}
+                alt={featured.data.title}
+                width="1080"
+                height="1080"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                loading="eager"
+              />
+            </div>
+            <div class="flex flex-col justify-center px-6 py-8 md:px-10 md:py-10">
+              <span class="inline-block text-[10px] font-mono font-semibold uppercase tracking-widest text-accent mb-4">
+                Latest
+              </span>
+              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight leading-[1.15] group-hover:text-accent transition-colors duration-300">
+                {featured.data.title}
+              </h2>
+              <p class="mt-3 text-ink-secondary text-sm leading-relaxed line-clamp-3">
+                {featured.data.description}
+              </p>
+              <div class="mt-6 flex items-center gap-3 text-xs font-mono text-ink-muted">
+                <time datetime={featured.data.date.toISOString().slice(0, 10)}>
+                  {featured.data.date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                </time>
+                <span class="text-rule">|</span>
+                <span>{featured.data.readTime}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      )}
+
+      <!-- Grid posts -->
+      <div class:list={["grid grid-cols-1 sm:grid-cols-2 gap-5", { "mt-8": isFirstPage }]}>
+        {gridPosts.map((post, i) => (
+          <a
+            href={`/blog/${post.id.replace(/\.md$/, "")}/`}
+            class="group rounded-xl border border-rule overflow-hidden bg-surface-alt/40 transition-all duration-500 hover:border-accent/30 hover:shadow-[0_0_60px_rgba(14,165,233,0.06)]"
+            data-reveal
+            style={`--delay:${(i + 1) * 80}ms`}
+          >
+            <div class="aspect-[16/10] overflow-hidden">
+              <img
+                src={post.data.cover}
+                alt={post.data.title}
+                width="1080"
+                height="1080"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="px-5 py-5">
+              <h2 class="text-lg font-semibold tracking-tight leading-snug group-hover:text-accent transition-colors duration-300">
+                {post.data.title}
+              </h2>
+              <p class="mt-2 text-ink-muted text-sm line-clamp-2">
+                {post.data.description}
+              </p>
+              <div class="mt-4 flex items-center gap-3 text-xs font-mono text-ink-faint">
+                <time datetime={post.data.date.toISOString().slice(0, 10)}>
+                  {post.data.date.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                </time>
+                <span class="text-rule">·</span>
+                <span>{post.data.readTime}</span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <!-- Pagination -->
+      {page.lastPage > 1 && (
+        <nav class="mt-12 flex items-center justify-center gap-2" aria-label="Blog pagination" data-reveal>
+          {page.url.prev ? (
+            <a
+              href={page.url.prev}
+              class="px-4 py-2 rounded-lg border border-rule text-sm font-medium text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
+            >
+              Previous
+            </a>
+          ) : (
+            <span class="px-4 py-2 rounded-lg border border-rule/40 text-sm font-medium text-ink-faint cursor-not-allowed">
+              Previous
+            </span>
+          )}
+
+          {Array.from({ length: page.lastPage }, (_, i) => i + 1).map((num) => (
+            <a
+              href={num === 1 ? "/blog/" : `/blog/page/${num}/`}
+              class:list={[
+                "w-10 h-10 rounded-lg border text-sm font-medium flex items-center justify-center transition-colors",
+                num === page.currentPage
+                  ? "border-accent bg-accent/10 text-accent"
+                  : "border-rule text-ink-secondary hover:text-accent hover:border-accent/40",
+              ]}
+              aria-current={num === page.currentPage ? "page" : undefined}
+            >
+              {num}
+            </a>
+          ))}
+
+          {page.url.next ? (
+            <a
+              href={page.url.next}
+              class="px-4 py-2 rounded-lg border border-rule text-sm font-medium text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
+            >
+              Next
+            </a>
+          ) : (
+            <span class="px-4 py-2 rounded-lg border border-rule/40 text-sm font-medium text-ink-faint cursor-not-allowed">
+              Next
+            </span>
+          )}
+        </nav>
+      )}
+    </div>
+
+    <!-- Right: sticky form (desktop only) -->
+    <aside class="hidden lg:block w-[300px] xl:w-[320px] flex-none" data-nosnippet>
+      <div class="sticky top-24" data-reveal style="--delay:300ms">
+        <div class="rounded-xl border border-rule bg-surface-alt/60 p-6">
+          <p class="text-lg font-bold tracking-tight mb-1">
+            Free audit
+          </p>
+          <p class="text-xs text-ink-muted mb-5">
+            Full report in 48 hours. No strings.
+          </p>
+
+          <form
+            id="blog-list-form"
+            class="flex flex-col gap-3"
+            action={formspreeUrl}
+            method="POST"
+            aria-label="Request a free Roofing website audit"
+          >
+            <input type="hidden" name="_subject" value="Blog List Audit Request" />
+            <input type="text" name="_gotcha" style="display:none" />
+            <input
+              type="text"
+              name="business_name"
+              placeholder="Business name"
+              required
+              autocomplete="organization"
+              class="w-full px-4 py-3 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+            />
+            <input
+              type="text"
+              name="website"
+              placeholder="yoursite.com"
+              required
+              autocomplete="url"
+              class="w-full px-4 py-3 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email for report"
+              required
+              autocomplete="email"
+              class="w-full px-4 py-3 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300"
+            />
+            <button
+              type="submit"
+              id="blog-list-submit"
+              class="w-full px-5 py-3.5 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-colors duration-300 cursor-pointer"
+            >
+              Run My Free Audit
+            </button>
+          </form>
+
+          <div id="blog-list-success" class="hidden text-center py-6">
+            <div class="w-10 h-10 rounded-full bg-success/15 flex items-center justify-center mx-auto mb-3">
+              <svg class="w-5 h-5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <p class="text-sm font-semibold mb-1">We're on it.</p>
+            <p class="text-xs text-ink-muted">Report in your inbox within 48 hours.</p>
+          </div>
+
+          <div class="mt-4 pt-4 border-t border-rule/60 space-y-2">
+            <div class="flex items-center gap-2">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M13.5 4.5L6.5 11.5L2.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-success" />
+              </svg>
+              <span class="text-[11px] text-ink-muted">No credit card</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M13.5 4.5L6.5 11.5L2.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-success" />
+              </svg>
+              <span class="text-[11px] text-ink-muted">No sales call</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M13.5 4.5L6.5 11.5L2.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-success" />
+              </svg>
+              <span class="text-[11px] text-ink-muted">Manually reviewed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Mobile form -->
+  <div class="lg:hidden mt-16 rounded-xl border border-accent/20 bg-accent/5 px-6 py-8" data-reveal data-nosnippet>
+    <p class="text-xl font-bold tracking-tight mb-1">
+      Want to know your score?
+    </p>
+    <p class="text-sm text-ink-secondary mb-5">
+      Drop your URL — full report in 48 hours.
+    </p>
+    <form
+      id="blog-list-form-mobile"
+      class="flex flex-col gap-3"
+      action={formspreeUrl}
+      method="POST"
+    >
+      <input type="hidden" name="_subject" value="Blog List Audit Request (Mobile)" />
+      <input type="text" name="_gotcha" style="display:none" />
+      <input type="text" name="business_name" placeholder="Business name" required class="w-full px-4 py-3.5 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300" />
+      <input type="text" name="website" placeholder="yoursite.com" required class="w-full px-4 py-3.5 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300" />
+      <input type="email" name="email" placeholder="Email for report" required class="w-full px-4 py-3.5 rounded-lg bg-surface border border-rule text-ink placeholder-ink-faint text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-300" />
+      <button type="submit" id="blog-list-submit-mobile" class="w-full px-5 py-3.5 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-colors duration-300 cursor-pointer">
+        Run My Free Audit
+      </button>
+    </form>
+    <div id="blog-list-success-mobile" class="hidden text-center py-6">
+      <p class="text-sm font-semibold mb-1">We're on it.</p>
+      <p class="text-xs text-ink-muted">Report in your inbox within 48 hours.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function setupForm(formId: string, successId: string, submitId: string) {
+    const form = document.getElementById(formId) as HTMLFormElement | null;
+    const success = document.getElementById(successId);
+    const btn = document.getElementById(submitId) as HTMLButtonElement | null;
+    if (!form || !success || !btn) return;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (btn.disabled) return;
+      btn.textContent = "Sending...";
+      btn.disabled = true;
+      try {
+        const res = await fetch(form.action, {
+          method: "POST",
+          body: new FormData(form),
+          headers: { Accept: "application/json" },
+        });
+        if (res.ok) {
+          form.classList.add("hidden");
+          success.classList.remove("hidden");
+        } else {
+          btn.textContent = "Something went wrong";
+          btn.disabled = false;
+          setTimeout(() => { btn.textContent = "Run My Free Audit"; }, 3000);
+        }
+      } catch {
+        btn.textContent = "Something went wrong";
+        btn.disabled = false;
+        setTimeout(() => { btn.textContent = "Run My Free Audit"; }, 3000);
+      }
+    });
+  }
+
+  setupForm("blog-list-form", "blog-list-success", "blog-list-submit");
+  setupForm("blog-list-form-mobile", "blog-list-success-mobile", "blog-list-submit-mobile");
+</script>

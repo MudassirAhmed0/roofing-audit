@@ -1,0 +1,275 @@
+---
+import "../styles/global.css";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+
+const gaId = import.meta.env.PUBLIC_GA_ID || "";
+const clarityId = import.meta.env.PUBLIC_CLARITY_ID || "";
+
+interface Props {
+  title: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  prevUrl?: string;
+  nextUrl?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = "Free Roofing website audit — we find exactly where your business is losing money online and fix it.",
+  canonical,
+  ogImage = "/og-image.png",
+  jsonLd,
+  prevUrl,
+  nextUrl,
+  noindex = false,
+} = Astro.props;
+
+const siteUrl = import.meta.env.SITE_URL || Astro.site?.href?.replace(/\/$/, "") || "https://roofingaudit.co";
+const pageUrl = canonical || `${siteUrl}${Astro.url.pathname}`;
+const ogImageUrl = `${siteUrl}${ogImage}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Primary Meta -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+    <meta name="author" content="Roofing Audit" />
+    <meta name="msvalidate.01" content="ae624aaa70534533a464253c4e997445" />
+    <link rel="canonical" href={pageUrl} />
+    {prevUrl && <link rel="prev" href={`${siteUrl}${prevUrl}`} />}
+    {nextUrl && <link rel="next" href={`${siteUrl}${nextUrl}`} />}
+
+    <!-- Warm up analytics connections (low priority, won't block LCP) -->
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://www.clarity.ms" />
+
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- Theme Color (mobile browser chrome) -->
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#18181b" media="(prefers-color-scheme: dark)" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:site_name" content="Roofing Audit" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Geo targeting (Texas-focused Roofing) -->
+    <meta name="geo.region" content="US-TX" />
+
+    <!-- Font preloads -->
+    <link
+      rel="preload"
+      href="/fonts/GeistVF.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/GeistMonoVF.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- JSON-LD Structured Data -->
+    {
+      jsonLd && Array.isArray(jsonLd)
+        ? jsonLd.map((ld) => (
+            <script
+              type="application/ld+json"
+              set:html={JSON.stringify(ld)}
+            />
+          ))
+        : jsonLd && (
+            <script
+              type="application/ld+json"
+              set:html={JSON.stringify(jsonLd)}
+            />
+          )
+    }
+  </head>
+  <body>
+    <div id="scroll-progress"></div>
+    <a href="#main" class="skip-to-content">Skip to content</a>
+    <Navbar />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      // ── Navbar scroll effect ──
+      const navEl = document.getElementById("navbar");
+      let navTicking = false;
+      function checkNav() {
+        if (navEl) {
+          navEl.classList.toggle("is-scrolled", window.scrollY > 40);
+        }
+        navTicking = false;
+      }
+      window.addEventListener("scroll", () => {
+        if (!navTicking) {
+          requestAnimationFrame(checkNav);
+          navTicking = true;
+        }
+      }, { passive: true });
+
+      // ── Scroll reveal observer ──
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
+      );
+      document
+        .querySelectorAll("[data-reveal], [data-reveal-line]")
+        .forEach((el) => revealObserver.observe(el));
+
+      // ── Animated counters ──
+      const counterObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const el = entry.target as HTMLElement;
+              const target = parseFloat(el.dataset.counter || "0");
+              const suffix = el.dataset.suffix || "";
+              const prefix = el.dataset.prefix || "";
+              const duration = 2000;
+              const start = performance.now();
+              const isFloat = target % 1 !== 0;
+
+              function step(now: number) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = isFloat
+                  ? (eased * target).toFixed(1)
+                  : Math.round(eased * target);
+                el.textContent = `${prefix}${current}${suffix}`;
+                if (progress < 1) requestAnimationFrame(step);
+              }
+
+              requestAnimationFrame(step);
+              counterObserver.unobserve(el);
+            }
+          });
+        },
+        { threshold: 0.3 }
+      );
+      document
+        .querySelectorAll("[data-counter]")
+        .forEach((el) => counterObserver.observe(el));
+
+      // ── Scroll progress bar ──
+      const progressBar = document.getElementById("scroll-progress");
+      let progressTicking = false;
+
+      function updateProgress() {
+        const scrollHeight =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollHeight > 0 ? window.scrollY / scrollHeight : 0;
+        if (progressBar) {
+          progressBar.style.transform = `scaleX(${progress})`;
+        }
+        progressTicking = false;
+      }
+
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (!progressTicking) {
+            requestAnimationFrame(updateProgress);
+            progressTicking = true;
+          }
+        },
+        { passive: true }
+      );
+
+      // ── Dynamic header theming ──
+      const navbar = document.getElementById("navbar");
+      const themedSections = document.querySelectorAll("[data-theme]");
+
+      if (themedSections.length > 0) {
+        const themeObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const theme = (entry.target as HTMLElement).dataset.theme;
+                navbar?.classList.remove("nav-dark", "nav-light");
+                if (theme === "light") {
+                  navbar?.classList.add("nav-light");
+                } else {
+                  navbar?.classList.add("nav-dark");
+                }
+              }
+            });
+          },
+          { threshold: 0, rootMargin: "-49% 0px -49% 0px" }
+        );
+        themedSections.forEach((s) => themeObserver.observe(s));
+      }
+    </script>
+    <script define:vars={{ gaId, clarityId }}>
+      // Load analytics only after page is fully loaded + buffer
+      // so scripts never compete with LCP for bandwidth/main thread
+      function loadAnalytics() {
+        // GA4
+        if (gaId) {
+          const s = document.createElement("script");
+          s.src = "https://www.googletagmanager.com/gtag/js?id=" + gaId;
+          s.async = true;
+          document.head.appendChild(s);
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          gtag("js", new Date());
+          gtag("config", gaId, { send_page_view: true });
+        }
+        // Clarity
+        if (clarityId) {
+          (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+          })(window, document, "clarity", "script", clarityId);
+        }
+      }
+      // Wait for full page load, then defer further to avoid LCP contention
+      if (document.readyState === "complete") {
+        setTimeout(loadAnalytics, 1000);
+      } else {
+        window.addEventListener("load", () => setTimeout(loadAnalytics, 1000), { once: true });
+      }
+    </script>
+  </body>
+</html>

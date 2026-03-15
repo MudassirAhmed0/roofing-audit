@@ -1,0 +1,72 @@
+---
+import Base from "../../../layouts/Base.astro";
+import BlogList from "../../../components/BlogList.astro";
+import { getCollection } from "astro:content";
+
+const formspreeUrl = import.meta.env.PUBLIC_FORMSPREE_URL || "";
+
+export async function getStaticPaths() {
+  const PAGE_1_COUNT = 9;
+  const POSTS_PER_PAGE = 8;
+  const allPosts = (await getCollection("blog")).sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime()
+  );
+  const remaining = allPosts.length - PAGE_1_COUNT;
+  const totalPages = remaining > 0 ? 1 + Math.ceil(remaining / POSTS_PER_PAGE) : 1;
+
+  return Array.from({ length: totalPages - 1 }, (_, i) => {
+    const pageNum = i + 2;
+    const start = PAGE_1_COUNT + (pageNum - 2) * POSTS_PER_PAGE;
+    return {
+      params: { num: String(pageNum) },
+      props: {
+        page: {
+          currentPage: pageNum,
+          lastPage: totalPages,
+          data: allPosts.slice(start, start + POSTS_PER_PAGE),
+          url: {
+            prev: pageNum === 2 ? "/blog/" : `/blog/page/${pageNum - 1}/`,
+            next: pageNum < totalPages ? `/blog/page/${pageNum + 1}/` : undefined,
+          },
+        },
+      },
+    };
+  });
+}
+
+const { page } = Astro.props;
+const prevUrl = page.url.prev;
+const nextUrl = page.url.next;
+
+const siteUrl = "https://roofingaudit.co";
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `Roofing Audit Blog — Page ${page.currentPage}`,
+    description: `Roofing marketing and website insights — page ${page.currentPage} of ${page.lastPage}.`,
+    url: `${siteUrl}/blog/page/${page.currentPage}/`,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${siteUrl}/blog/` },
+      { "@type": "ListItem", position: 3, name: `Page ${page.currentPage}`, item: `${siteUrl}/blog/page/${page.currentPage}/` },
+    ],
+  },
+];
+---
+
+<Base
+  title={`Blog — Page ${page.currentPage} — Roofing Audit`}
+  description={`Roofing marketing and website insights — page ${page.currentPage} of ${page.lastPage}. Data-backed strategies for contractors losing leads online.`}
+  prevUrl={prevUrl}
+  nextUrl={nextUrl}
+  jsonLd={jsonLd}
+>
+  <section class="pt-28 pb-20 sm:pt-32 sm:pb-28">
+    <BlogList page={page} formspreeUrl={formspreeUrl} />
+  </section>
+</Base>

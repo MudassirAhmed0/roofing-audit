@@ -1,0 +1,66 @@
+---
+interface Props {
+  distribution: Record<string, number>;
+  avgScore: number;
+  medianScore: number;
+  bestScore: number;
+  worstScore: number;
+  indexName?: string;
+}
+
+const {
+  distribution,
+  avgScore,
+  medianScore,
+  bestScore,
+  worstScore,
+  indexName = "Roofing Website Index",
+} = Astro.props;
+
+const buckets = ["0-20", "21-40", "41-60", "61-80", "81-100"];
+const maxCount = Math.max(...buckets.map((b) => distribution[b] || 0));
+const total = buckets.reduce((sum, b) => sum + (distribution[b] || 0), 0);
+---
+
+<div data-reveal class="rounded-xl border border-rule bg-surface-alt/60 p-6">
+  <h3 class="text-lg font-bold tracking-tight mb-1">{indexName} Score Distribution</h3>
+  <p class="text-xs text-ink-muted mb-6">Based on {total} in-depth website audits</p>
+
+  <div class="space-y-3">
+    {buckets.map((bucket) => {
+      const count = distribution[bucket] || 0;
+      const pct = maxCount > 0 ? (count / maxCount) * 100 : 0;
+      return (
+        <div class="flex items-center gap-3">
+          <span class="w-12 text-xs text-ink-muted font-mono text-right flex-none">{bucket}</span>
+          <div class="flex-1 h-6 rounded bg-surface relative overflow-hidden">
+            <div
+              class="h-full rounded bg-accent/80 transition-all duration-700"
+              style={`width: ${pct}%`}
+            />
+          </div>
+          <span class="w-10 text-xs text-ink-secondary font-mono text-right flex-none">{count}</span>
+        </div>
+      );
+    })}
+  </div>
+
+  <div class="mt-6 pt-4 border-t border-rule/60 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+    <div>
+      <p class="text-xl font-bold text-ink">{avgScore}</p>
+      <p class="text-[10px] text-ink-muted uppercase tracking-wider">Average</p>
+    </div>
+    <div>
+      <p class="text-xl font-bold text-ink">{medianScore}</p>
+      <p class="text-[10px] text-ink-muted uppercase tracking-wider">Median</p>
+    </div>
+    <div>
+      <p class="text-xl font-bold text-success">{bestScore}</p>
+      <p class="text-[10px] text-ink-muted uppercase tracking-wider">Highest</p>
+    </div>
+    <div>
+      <p class="text-xl font-bold text-danger">{worstScore}</p>
+      <p class="text-[10px] text-ink-muted uppercase tracking-wider">Lowest</p>
+    </div>
+  </div>
+</div>
