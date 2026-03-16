@@ -25,7 +25,7 @@ if (!DB_URL) {
 // ── Thresholds ──────────────────────────────────────────────────────
 const CITY_THRESHOLD = 10;
 const STATE_THRESHOLD = 20;
-const PROBLEM_FREQUENCY_THRESHOLD = 0.3; // 30%
+const PROBLEM_FREQUENCY_THRESHOLD = 0.25; // 25%
 
 // ── State name mapping ──────────────────────────────────────────────
 const STATE_NAMES = {
@@ -46,6 +46,168 @@ const STATE_NAMES = {
 // Maps deep audit gap names (or prefixes) to slugs and display names.
 // matchGap() below does prefix matching so partial DB names still resolve.
 const GAP_MAP = {
+  // ── Roofing-specific gaps ──────────────────────────────────────────
+  "No storm damage gallery / before-after photos": {
+    slug: "no-storm-gallery",
+    display: "No Storm Damage Gallery",
+    category: "trust",
+  },
+  "No manufacturer warranty information page": {
+    slug: "no-warranty-page",
+    display: "No Manufacturer Warranty Page",
+    category: "content",
+  },
+  "No same-day / rapid response messaging for storm damage": {
+    slug: "no-rapid-response",
+    display: "No Rapid Response Messaging",
+    category: "competitive",
+  },
+  "No RoofingContractor or LocalBusiness schema markup": {
+    slug: "no-schema-markup",
+    display: "No RoofingContractor Schema Markup",
+    category: "seo",
+  },
+  "Missing quantified social proof (projects completed, homes served)": {
+    slug: "no-social-proof",
+    display: "No Quantified Social Proof",
+    category: "trust",
+  },
+  "No 'Free Estimate' or 'Free Inspection' CTA": {
+    slug: "no-free-estimate-cta",
+    display: "No Free Estimate CTA",
+    category: "lead-capture",
+  },
+  "No project gallery or before/after photos": {
+    slug: "no-project-gallery",
+    display: "No Project Gallery",
+    category: "trust",
+  },
+  "No testimonial or review showcase page": {
+    slug: "no-testimonial-page",
+    display: "No Testimonial Showcase Page",
+    category: "trust",
+  },
+  "No manufacturer certifications mentioned (GAF, Owens Corning, CertainTeed)": {
+    slug: "no-certifications",
+    display: "No Manufacturer Certifications Displayed",
+    category: "trust",
+  },
+  "No \"how to file a roofing insurance claim\" content": {
+    slug: "no-insurance-content",
+    display: "No Insurance Claim Content",
+    category: "content",
+  },
+  "No emergency repair / tarping page": {
+    slug: "no-emergency-page",
+    display: "No Emergency Repair Page",
+    category: "lead-capture",
+  },
+  "No metal roofing page (fastest growing segment, 15-20% of market)": {
+    slug: "no-metal-roofing-page",
+    display: "No Metal Roofing Page",
+    category: "content",
+  },
+  "No \"roof replacement process\" educational content": {
+    slug: "no-replacement-process",
+    display: "No Roof Replacement Process Page",
+    category: "content",
+  },
+  "No warranty comparison page": {
+    slug: "no-warranty-comparison",
+    display: "No Warranty Comparison Page",
+    category: "content",
+  },
+  "No solar-ready or energy-efficiency roofing content": {
+    slug: "no-solar-content",
+    display: "No Solar-Ready Content",
+    category: "content",
+  },
+  "No drone inspection or aerial technology mention": {
+    slug: "no-drone-mention",
+    display: "No Drone Inspection Mention",
+    category: "competitive",
+  },
+  "No fascia & soffit repair page": {
+    slug: "no-fascia-soffit-page",
+    display: "No Fascia & Soffit Page",
+    category: "content",
+  },
+  "No gutter guard / leaf protection page": {
+    slug: "no-gutter-page",
+    display: "No Gutter Guard Page",
+    category: "content",
+  },
+  "No roof type comparison content": {
+    slug: "no-roof-comparison",
+    display: "No Roof Type Comparison Content",
+    category: "content",
+  },
+  "No chimney repair & flashing page": {
+    slug: "no-chimney-flashing",
+    display: "No Chimney Repair & Flashing Page",
+    category: "content",
+  },
+  "No attic ventilation page": {
+    slug: "no-ventilation-page",
+    display: "No Attic Ventilation Page",
+    category: "content",
+  },
+  "No \"signs you need a new roof\" educational content": {
+    slug: "no-signs-content",
+    display: "No Signs You Need a New Roof Content",
+    category: "content",
+  },
+  "No \"how much does a new roof cost\" content": {
+    slug: "no-cost-content",
+    display: "No Roof Cost Content",
+    category: "content",
+  },
+  "No HOA / neighborhood compliance content": {
+    slug: "no-hoa-content",
+    display: "No HOA Compliance Content",
+    category: "content",
+  },
+  "Image alt tag coverage only 0%": {
+    slug: "no-image-alt-tags",
+    display: "No Image Alt Tags",
+    category: "seo",
+  },
+  "No call tracking detected": {
+    slug: "no-call-tracking",
+    display: "No Call Tracking",
+    category: "tracking",
+  },
+  "No specials or coupons page": {
+    slug: "no-specials-page",
+    display: "No Specials or Coupons Page",
+    category: "content",
+  },
+  "No slate roofing page": {
+    slug: "no-slate-page",
+    display: "No Slate Roofing Page",
+    category: "content",
+  },
+  "No cedar shake / wood shingle roofing page": {
+    slug: "no-cedar-shake-page",
+    display: "No Cedar Shake Roofing Page",
+    category: "content",
+  },
+  "No roof coating & restoration page": {
+    slug: "no-coating-page",
+    display: "No Roof Coating & Restoration Page",
+    category: "content",
+  },
+  "No siding installation/repair page": {
+    slug: "no-siding-page",
+    display: "No Siding Page",
+    category: "content",
+  },
+  "No skylight installation/repair page": {
+    slug: "no-skylight-page",
+    display: "No Skylight Page",
+    category: "content",
+  },
+  // ── Shared gaps (cleaning + roofing) ───────────────────────────────
   "No online booking or instant quote": {
     slug: "no-online-booking",
     display: "No Online Booking or Instant Quote",
