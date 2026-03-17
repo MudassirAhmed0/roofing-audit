@@ -34,7 +34,7 @@ const LICENSE_TEXT = {
   FL: "Displaying a business license or bonding number builds trust with homeowners. Not showing it makes the business look less legitimate than competitors who display theirs.",
 };
 
-// ── Website Quality Score (mirrors hvac.ts calculateWebsiteQualityScore) ─
+// ── Website Quality Score ─────────────────────────────────────────────────
 function calculateWebsiteQualityScore(audit) {
   if (audit.websiteQualityScore) return audit.websiteQualityScore;
 
@@ -137,7 +137,7 @@ function buildDiagnosticFields(audit, qualityScore) {
   };
 }
 
-// ── Impact estimate calculation (mirrors hvac.ts calculateRevenueImpact) ─
+// ── Impact estimate calculation ───────────────────────────────────────────
 function buildImpactEstimate(audit, lead) {
   let lostLeads = 0;
   if (audit.pageSpeedSeconds && audit.pageSpeedSeconds > 3) lostLeads += 3;

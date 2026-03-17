@@ -1,7 +1,7 @@
 /**
- * Generates OG image (1200x630) and apple-touch-icon (180x180) for Cleaning Audit.
+ * Generates OG image (1200x630) and apple-touch-icon (180x180) for Roofing Audit.
  *
- * Uses Playwright to render HTML → PNG with the cleaning brand (light theme, emerald accent).
+ * Uses Playwright to render HTML → PNG with the roofing brand (dark theme, amber accent).
  *
  * Usage: npx playwright install chromium && node scripts/generate-og.mjs
  */
@@ -28,9 +28,9 @@ const html = `<!DOCTYPE html>
   body {
     width: 1200px;
     height: 630px;
-    background: #ffffff;
+    background: #1c1917;
     font-family: 'Geist', system-ui, sans-serif;
-    color: #18181b;
+    color: #fafaf9;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -43,7 +43,7 @@ const html = `<!DOCTYPE html>
     position: absolute;
     top: 0; right: 0;
     width: 60%; height: 100%;
-    background: radial-gradient(ellipse at 80% 20%, rgba(5,150,105,0.06), transparent 70%);
+    background: radial-gradient(ellipse at 80% 20%, rgba(217,119,6,0.10), transparent 70%);
     pointer-events: none;
   }
   .top {
@@ -59,7 +59,7 @@ const html = `<!DOCTYPE html>
     align-items: center;
     gap: 8px;
     font-size: 13px;
-    color: #059669;
+    color: #d97706;
     font-weight: 600;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -68,7 +68,7 @@ const html = `<!DOCTYPE html>
   .label-dot {
     width: 6px; height: 6px;
     border-radius: 50%;
-    background: #059669;
+    background: #d97706;
   }
   h1 {
     font-size: 58px;
@@ -76,9 +76,9 @@ const html = `<!DOCTYPE html>
     line-height: 1;
     letter-spacing: -0.03em;
     max-width: 900px;
-    color: #18181b;
+    color: #fafaf9;
   }
-  h1 .accent { color: #059669; }
+  h1 .accent { color: #d97706; }
   .cta-row {
     margin-top: 28px;
     display: flex;
@@ -91,7 +91,7 @@ const html = `<!DOCTYPE html>
     gap: 8px;
     padding: 14px 32px;
     border-radius: 8px;
-    background: #059669;
+    background: #d97706;
     color: #ffffff;
     font-size: 15px;
     font-weight: 700;
@@ -99,7 +99,7 @@ const html = `<!DOCTYPE html>
   }
   .cta-sub {
     font-size: 13px;
-    color: #71717a;
+    color: #a8a29e;
   }
   .bottom {
     position: relative;
@@ -107,7 +107,7 @@ const html = `<!DOCTYPE html>
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    border-top: 1px solid #e4e4e7;
+    border-top: 1px solid #3f3f46;
     padding-top: 32px;
   }
   .stats {
@@ -118,11 +118,11 @@ const html = `<!DOCTYPE html>
     font-size: 32px;
     font-weight: 700;
     letter-spacing: -0.02em;
-    color: #18181b;
+    color: #fafaf9;
   }
   .stat-label {
     font-size: 10px;
-    color: #71717a;
+    color: #a8a29e;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-top: 4px;
@@ -136,11 +136,11 @@ const html = `<!DOCTYPE html>
     font-size: 16px;
     font-weight: 600;
     letter-spacing: -0.01em;
-    color: #18181b;
+    color: #fafaf9;
   }
   .brand-url {
     font-size: 13px;
-    color: #71717a;
+    color: #a8a29e;
     margin-left: 4px;
   }
 </style>
@@ -152,7 +152,7 @@ const html = `<!DOCTYPE html>
       <div class="label-dot"></div>
       Free Website Audit
     </div>
-    <h1>Your cleaning website is <span class="accent">losing you calls</span></h1>
+    <h1>Your roofing website is <span class="accent">losing you calls</span></h1>
     <div class="cta-row">
       <div class="cta-btn">Get Your Free Audit →</div>
       <span class="cta-sub">No credit card • 48hr report</span>
@@ -175,13 +175,13 @@ const html = `<!DOCTYPE html>
     </div>
     <div class="brand">
       <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
-        <path d="M40 12 L10 22V50Q10 85 40 95Q70 85 70 50V22L40 12Z" fill="#fff" stroke="#18181b" stroke-width="8" stroke-linejoin="round"/>
+        <path d="M40 12 L10 22V50Q10 85 40 95Q70 85 70 50V22L40 12Z" fill="#fff" stroke="#fafaf9" stroke-width="8" stroke-linejoin="round"/>
         <path d="M22 47L38 63L82 19" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M22 47L38 63L82 19" stroke="#059669" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M85 33Q85 45 97 45Q85 45 85 57Q85 45 73 45Q85 45 85 33Z" fill="#059669"/>
+        <path d="M22 47L38 63L82 19" stroke="#d97706" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M85 33Q85 45 97 45Q85 45 85 57Q85 45 73 45Q85 45 85 33Z" fill="#d97706"/>
       </svg>
-      <span class="brand-name">Cleaning Audit</span>
-      <span class="brand-url">cleaningaudit.co</span>
+      <span class="brand-name">Roofing Audit</span>
+      <span class="brand-url">roofingaudit.co</span>
     </div>
   </div>
 </body>
@@ -201,7 +201,7 @@ const touchHtml = `<!DOCTYPE html>
   * { margin: 0; }
   body {
     width: 180px; height: 180px;
-    background: #ffffff;
+    background: #1c1917;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -210,10 +210,10 @@ const touchHtml = `<!DOCTYPE html>
 </head>
 <body>
   <svg width="120" height="120" viewBox="0 0 100 100" fill="none">
-    <path d="M40 12 L10 22V50Q10 85 40 95Q70 85 70 50V22L40 12Z" fill="#ecfdf5" stroke="#18181b" stroke-width="6" stroke-linejoin="round"/>
-    <path d="M22 47L38 63L82 19" stroke="#ecfdf5" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M22 47L38 63L82 19" stroke="#059669" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M85 33Q85 45 97 45Q85 45 85 57Q85 45 73 45Q85 45 85 33Z" fill="#059669"/>
+    <path d="M40 12 L10 22V50Q10 85 40 95Q70 85 70 50V22L40 12Z" fill="#292524" stroke="#fafaf9" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M22 47L38 63L82 19" stroke="#292524" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M22 47L38 63L82 19" stroke="#d97706" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M85 33Q85 45 97 45Q85 45 85 57Q85 45 73 45Q85 45 85 33Z" fill="#d97706"/>
   </svg>
 </body>
 </html>`;

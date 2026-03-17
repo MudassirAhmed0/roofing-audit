@@ -450,7 +450,7 @@ async function main() {
   await client.connect();
   console.log("Connected to database.");
 
-  // ─── Pull all HVAC leads with enrichment + deep audit ─────────────
+  // ─── Pull all roofing leads with enrichment + deep audit ────────────
   const res = await client.query(`
     SELECT
       id, city, state, rating, review_count,

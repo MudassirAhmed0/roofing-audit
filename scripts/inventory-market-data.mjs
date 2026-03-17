@@ -116,13 +116,13 @@ async function main() {
       COUNT(*) FILTER (WHERE niche_audit IS NOT NULL) as deep_audited,
       COUNT(*) FILTER (WHERE status = 'enriched' OR status = 'contacted' OR status = 'closed') as enriched
     FROM leads
-    WHERE category = 'house_cleaning'
+    WHERE category = 'roofing'
   `);
   const totals = totalRes.rows[0];
   console.log("═══════════════════════════════════════════════════════════════");
   console.log("                    MARKET DATA INVENTORY");
   console.log("═══════════════════════════════════════════════════════════════\n");
-  console.log(`  Total cleaning leads:     ${totals.total}`);
+  console.log(`  Total roofing leads:      ${totals.total}`);
   console.log(`  Enriched:             ${totals.enriched}`);
   console.log(`  Deep audited:         ${totals.deep_audited}`);
   console.log();
@@ -142,7 +142,7 @@ async function main() {
       COUNT(*) FILTER (WHERE is_mobile_responsive = true)::float / NULLIF(COUNT(*), 0) as mobile_rate,
       COUNT(*) FILTER (WHERE has_meta_seo = true)::float / NULLIF(COUNT(*), 0) as seo_rate
     FROM leads
-    WHERE category = 'house_cleaning' AND state IS NOT NULL
+    WHERE category = 'roofing' AND state IS NOT NULL
     GROUP BY state
     ORDER BY total DESC
   `);
@@ -176,7 +176,7 @@ async function main() {
       AVG(rating) FILTER (WHERE rating IS NOT NULL) as avg_rating,
       AVG(review_count) FILTER (WHERE review_count IS NOT NULL) as avg_reviews
     FROM leads
-    WHERE category = 'house_cleaning' AND city IS NOT NULL AND state IS NOT NULL
+    WHERE category = 'roofing' AND city IS NOT NULL AND state IS NOT NULL
     GROUP BY city, state
     ORDER BY total DESC
   `);
@@ -216,7 +216,7 @@ async function main() {
       AVG(rating) FILTER (WHERE rating IS NOT NULL) as avg_rating,
       AVG(review_count) FILTER (WHERE review_count IS NOT NULL) as avg_reviews
     FROM leads
-    WHERE category = 'house_cleaning'
+    WHERE category = 'roofing'
   `);
   const nat = natRes.rows[0];
 
@@ -254,7 +254,7 @@ async function main() {
       COUNT(*) FILTER (WHERE page_speed_seconds IS NOT NULL) as speed_checked,
       COUNT(*) FILTER (WHERE page_speed_seconds > 3) as slow_speed
     FROM leads
-    WHERE category = 'house_cleaning'
+    WHERE category = 'roofing'
   `);
   const gaps = gapRes.rows[0];
 
@@ -317,7 +317,7 @@ async function main() {
         ELSE '[]'::jsonb
       END
     ) as sub_niche
-    WHERE category = 'house_cleaning'
+    WHERE category = 'roofing'
     GROUP BY sub_niche
     ORDER BY leads_with DESC
   `);
@@ -337,7 +337,7 @@ async function main() {
       has_clear_cta, has_contact_form, is_mobile_responsive,
       has_meta_seo, page_speed_seconds, niche_audit
     FROM leads
-    WHERE category = 'house_cleaning'
+    WHERE category = 'roofing'
       AND (has_ssl IS NOT NULL OR has_online_booking IS NOT NULL)
   `);
 
@@ -427,7 +427,7 @@ async function main() {
       COUNT(*) FILTER (WHERE state IS NULL) as null_state,
       COUNT(*) FILTER (WHERE website IS NULL OR website = '') as null_website
     FROM leads
-    WHERE category = 'house_cleaning'
+    WHERE category = 'roofing'
   `);
   const nulls = nullCheckRes.rows[0];
 
