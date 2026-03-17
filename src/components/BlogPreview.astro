@@ -33,7 +33,7 @@ const posts = (await getCollection("blog"))
       {posts.map((post, i) => (
         <a
           href={`/blog/${post.id.replace(/\.md$/, "")}/`}
-          class="group rounded-sm border border-rule overflow-hidden bg-surface-alt/40 transition-all duration-500 hover:border-accent/30 hover:shadow-[0_0_60px_rgba(14,165,233,0.06)]"
+          class="group rounded-sm border border-rule overflow-hidden bg-surface-alt/40 transition-all duration-500 hover:border-accent/30 hover:shadow-[0_0_60px_rgba(217,119,6,0.06)]"
           data-reveal
           style={`--delay:${(i + 1) * 80}ms`}
         >

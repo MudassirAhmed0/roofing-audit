@@ -286,7 +286,7 @@ async function main() {
       COUNT(*) as occurrences
     FROM leads,
     LATERAL jsonb_array_elements(niche_audit->'gapSummary') as gap_item
-    WHERE leads.category = 'house_cleaning'
+    WHERE leads.category = 'roofing'
       AND niche_audit IS NOT NULL
       AND jsonb_typeof(niche_audit->'gapSummary') = 'array'
     GROUP BY gap_item->>'gap', gap_item->>'severity', gap_item->>'category'

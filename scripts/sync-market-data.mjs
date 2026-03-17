@@ -207,7 +207,7 @@ const GAP_MAP = {
     display: "No Skylight Page",
     category: "content",
   },
-  // ── Shared gaps (cleaning + roofing) ───────────────────────────────
+  // ── Shared gaps ────────────────────────────────────────────────────
   "No online booking or instant quote": {
     slug: "no-online-booking",
     display: "No Online Booking or Instant Quote",
